@@ -2,284 +2,508 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Monchis — Algo es tuyo 🍟</title>
-  <meta property="og:title" content="👀 Alguien guardó esto para ti">
-  <meta property="og:description" content="Tienes PAPAS GRATIS esperándote. Entra antes de que se acaben.">
-  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>Monchis — Alitas a domicilio</title>
+  <meta property="og:title" content="👀 Algo te espera en Monchis">
+  <meta property="og:description" content="Papas gratis con tu pedido. Solo por hoy.">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
-    html, body {
-      min-height: 100%;
-      font-family: 'Nunito', sans-serif;
-      -webkit-font-smoothing: antialiased;
-      overflow-x: hidden;
-    }
-
+    html { scroll-behavior: smooth; }
     body {
-      background: #FF4500;
-      background: linear-gradient(160deg, #FF6B00 0%, #FF2D00 40%, #C0000A 100%);
-      color: #fff;
+      font-family: 'Nunito', sans-serif;
+      background: #0f0400;
+      color: white;
+      overflow-x: hidden;
+      padding-bottom: 80px;
     }
 
-    /* ── PARTÍCULAS DE FONDO ── */
-    .bg-dots {
+    /* ══ BOTÓN FLOTANTE WHATSAPP ══ */
+    .wa-sticky {
       position: fixed;
-      inset: 0;
-      background-image:
-        radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px);
-      background-size: 28px 28px;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .page {
-      position: relative;
-      z-index: 1;
-      min-height: 100svh;
+      bottom: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 12px 16px;
+      background: linear-gradient(to top, rgba(0,0,0,0.95), rgba(0,0,0,0.7));
       display: flex;
-      flex-direction: column;
-      align-items: center;
       justify-content: center;
-      padding: 36px 24px 40px;
-      text-align: center;
     }
-
-    /* ── BADGE TOP ── */
-    .badge-top {
-      background: rgba(0,0,0,0.25);
-      border: 1.5px solid rgba(255,255,255,0.25);
-      border-radius: 100px;
-      padding: 6px 18px;
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 1.5px;
-      color: rgba(255,255,255,0.9);
-      text-transform: uppercase;
-      margin-bottom: 28px;
-      backdrop-filter: blur(8px);
-    }
-
-    /* ── HOOK TEXT ── */
-    .hook {
-      font-size: clamp(16px, 4.5vw, 20px);
-      font-weight: 700;
-      color: rgba(255,255,255,0.75);
-      margin-bottom: 10px;
-      letter-spacing: 0.3px;
-    }
-
-    /* ── OFERTA PRINCIPAL ── */
-    .offer-wrap {
-      position: relative;
-      margin-bottom: 8px;
-    }
-
-    .offer-bg-text {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-family: 'Bangers', cursive;
-      font-size: clamp(130px, 38vw, 200px);
-      color: rgba(0,0,0,0.08);
-      white-space: nowrap;
-      pointer-events: none;
-      letter-spacing: 2px;
-    }
-
-    .offer-main {
-      font-family: 'Bangers', cursive;
-      font-size: clamp(72px, 22vw, 120px);
-      line-height: 0.9;
-      letter-spacing: 3px;
-      color: #fff;
-      text-shadow:
-        4px 4px 0px rgba(0,0,0,0.3),
-        0 0 40px rgba(255,200,0,0.3);
-      position: relative;
-      z-index: 1;
-    }
-
-    .offer-item {
-      font-family: 'Bangers', cursive;
-      font-size: clamp(38px, 12vw, 60px);
-      letter-spacing: 4px;
-      color: #FFE000;
-      text-shadow:
-        2px 2px 0px rgba(0,0,0,0.4),
-        0 0 20px rgba(255,220,0,0.4);
-      margin-bottom: 6px;
-      position: relative;
-      z-index: 1;
-    }
-
-    /* ── EMOJI DECORATIVO ── */
-    .emoji-row {
-      font-size: clamp(28px, 8vw, 40px);
-      margin-bottom: 20px;
-      animation: bounce 1.5s ease-in-out infinite;
-    }
-
-    @keyframes bounce {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-6px); }
-    }
-
-    /* ── CARD DE CONDICIONES ── */
-    .card {
-      background: rgba(0,0,0,0.2);
-      border: 1.5px solid rgba(255,255,255,0.2);
-      border-radius: 16px;
-      padding: 16px 20px;
-      width: 100%;
-      max-width: 320px;
-      margin-bottom: 20px;
-      backdrop-filter: blur(6px);
-    }
-
-    .card p {
-      font-size: clamp(13px, 3.5vw, 15px);
-      font-weight: 700;
-      color: rgba(255,255,255,0.85);
-      line-height: 1.6;
-    }
-
-    .card .highlight {
-      color: #FFE000;
-    }
-
-    /* ── URGENCIA ── */
-    .urgency {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      font-size: 12px;
-      font-weight: 900;
-      letter-spacing: 1.5px;
-      color: #FFE000;
-      text-transform: uppercase;
-      margin-bottom: 28px;
-    }
-
-    .dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: #FFE000;
-      animation: blink 1s ease-in-out infinite;
-    }
-
-    @keyframes blink {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.3; transform: scale(0.7); }
-    }
-
-    /* ── BOTÓN WHATSAPP ── */
-    .btn-wa {
+    .wa-sticky a {
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 10px;
       width: 100%;
-      max-width: 320px;
-      padding: 18px 24px;
+      max-width: 420px;
+      padding: 16px 20px;
       background: #25D366;
-      border-radius: 100px;
+      border-radius: 50px;
       font-size: 16px;
-      font-weight: 900;
-      color: #fff;
+      font-weight: 800;
+      color: white;
       text-decoration: none;
-      letter-spacing: 0.5px;
-      box-shadow:
-        0 8px 0 #1aab52,
-        0 12px 20px rgba(0,0,0,0.3);
-      transition: all 0.15s ease;
+      box-shadow: 0 6px 0 #1aab52, 0 10px 24px rgba(37,211,102,0.3);
+      transition: all 0.15s;
       -webkit-tap-highlight-color: transparent;
+    }
+    .wa-sticky a:active { transform: translateY(3px); box-shadow: 0 3px 0 #1aab52; }
+    .wa-sticky svg { width: 22px; height: 22px; flex-shrink: 0; }
+
+    /* ══ HERO ══ */
+    .hero {
       position: relative;
-    }
-
-    .btn-wa:active {
-      transform: translateY(4px);
-      box-shadow:
-        0 4px 0 #1aab52,
-        0 6px 12px rgba(0,0,0,0.3);
-    }
-
-    .btn-wa svg { width: 22px; height: 22px; flex-shrink: 0; }
-
-    /* ── BRAND FOOTER ── */
-    .footer {
-      margin-top: 28px;
+      min-height: 100svh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 4px;
+      justify-content: flex-end;
+      text-align: center;
+      overflow: hidden;
+      padding-bottom: 40px;
     }
 
-    .footer .brand-name {
-      font-family: 'Bangers', cursive;
-      font-size: 28px;
-      letter-spacing: 3px;
-      color: rgba(255,255,255,0.5);
+    /* Foto de fondo — reemplaza con tu imagen */
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.8) 70%, #0f0400 100%),
+        linear-gradient(160deg, #5c1a00 0%, #2a0900 50%, #1a0400 100%);
+      /* Para agregar foto: background-image: url('tus-alitas.jpg'); background-size: cover; background-position: center; */
     }
 
-    .footer .brand-sub {
-      font-size: 11px;
+    /* Placeholder visual mientras no hay foto */
+    .hero-food-emoji {
+      position: absolute;
+      top: 8%;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: clamp(100px, 35vw, 180px);
+      filter: drop-shadow(0 20px 40px rgba(255,100,0,0.4));
+      animation: float 3s ease-in-out infinite;
+      pointer-events: none;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(-12px); }
+    }
+
+    /* Badge superior */
+    .hero-badge {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255,255,255,0.12);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 100px;
+      padding: 7px 20px;
+      font-size: 12px;
       font-weight: 700;
+      letter-spacing: 1.5px;
+      white-space: nowrap;
+    }
+
+    .hero-content { position: relative; z-index: 1; padding: 0 20px; }
+
+    .hero-hook {
+      font-size: clamp(13px, 3.5vw, 16px);
+      font-weight: 700;
+      color: rgba(255,255,255,0.6);
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+
+    .hero-offer {
+      font-family: 'Bebas Neue', Impact, sans-serif;
+      font-size: clamp(68px, 22vw, 110px);
+      line-height: 0.88;
       letter-spacing: 2px;
+      color: #fff;
+      text-shadow: 0 4px 30px rgba(255,100,0,0.5);
+      margin-bottom: 4px;
+    }
+
+    .hero-item {
+      font-family: 'Bebas Neue', Impact, sans-serif;
+      font-size: clamp(36px, 11vw, 56px);
+      letter-spacing: 4px;
+      color: #FFD700;
+      text-shadow: 0 2px 12px rgba(255,200,0,0.4);
+      margin-bottom: 20px;
+    }
+
+    .hero-cond {
+      font-size: clamp(13px, 3.5vw, 15px);
+      font-weight: 700;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 28px;
+    }
+
+    .hero-cond span { color: #FFD700; }
+
+    .scroll-hint {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
       color: rgba(255,255,255,0.3);
+      font-size: 10px;
+      letter-spacing: 3px;
       text-transform: uppercase;
+    }
+    .scroll-hint::after {
+      content: '';
+      width: 1px;
+      height: 28px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.3), transparent);
+      animation: drop 1.8s ease infinite;
+    }
+    @keyframes drop {
+      0% { opacity: 0; transform: scaleY(0); transform-origin: top; }
+      50% { opacity: 1; transform: scaleY(1); transform-origin: top; }
+      100% { opacity: 0; transform: scaleY(1); transform-origin: bottom; }
+    }
+
+    /* ══ URGENCIA ══ */
+    .urgency-bar {
+      background: #e63000;
+      padding: 12px 20px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .urgency-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #FFD700;
+      animation: blink 1s ease infinite;
+      flex-shrink: 0;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; } 50% { opacity: 0.2; }
+    }
+
+    /* ══ SECCIÓN PRODUCTO ══ */
+    .section { padding: 40px 20px; max-width: 480px; margin: 0 auto; }
+
+    .section-label {
+      font-size: 11px;
+      letter-spacing: 4px;
+      color: #e63000;
+      text-transform: uppercase;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .section-title {
+      font-family: 'Bebas Neue', Impact, sans-serif;
+      font-size: clamp(38px, 12vw, 52px);
+      letter-spacing: 2px;
+      line-height: 1;
+      margin-bottom: 16px;
+    }
+
+    /* Grid de fotos */
+    .food-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .food-card {
+      border-radius: 12px;
+      overflow: hidden;
+      aspect-ratio: 1;
+      position: relative;
+      background: linear-gradient(145deg, #3d1200, #7a2500);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      /* Reemplaza con: background-image: url('foto.jpg'); background-size: cover; */
+    }
+
+    .food-card:first-child {
+      grid-column: 1 / -1;
+      aspect-ratio: 16/9;
+      font-size: 72px;
+    }
+
+    .food-card-label {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      background: linear-gradient(transparent, rgba(0,0,0,0.8));
+      padding: 20px 12px 10px;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+
+    /* ══ TARJETA DE OFERTA ══ */
+    .offer-card {
+      background: linear-gradient(135deg, #e63000, #ff8c00);
+      border-radius: 20px;
+      padding: 24px 20px;
+      text-align: center;
+      margin: 0 20px 20px;
+      max-width: 440px;
+      margin-left: auto;
+      margin-right: auto;
+      box-shadow: 0 16px 40px rgba(230,48,0,0.35);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .offer-card::before {
+      content: '🍟';
+      position: absolute;
+      font-size: 120px;
+      right: -20px;
+      bottom: -20px;
+      opacity: 0.15;
+      pointer-events: none;
+    }
+
+    .offer-card .oc-pre {
+      font-size: 11px;
+      letter-spacing: 4px;
+      color: rgba(255,255,255,0.7);
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .offer-card .oc-main {
+      font-family: 'Bebas Neue', Impact, sans-serif;
+      font-size: clamp(44px, 14vw, 60px);
+      letter-spacing: 2px;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .offer-card .oc-item {
+      font-family: 'Bebas Neue', Impact, sans-serif;
+      font-size: clamp(28px, 9vw, 38px);
+      letter-spacing: 3px;
+      color: rgba(255,255,255,0.9);
+      margin-bottom: 14px;
+    }
+
+    .offer-card .oc-cond {
+      font-size: 12px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.75);
+      background: rgba(0,0,0,0.2);
+      border-radius: 8px;
+      padding: 8px 14px;
+      line-height: 1.5;
+    }
+
+    /* ══ SOCIAL PROOF ══ */
+    .proof-section {
+      padding: 20px 20px 10px;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .proof-counter {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .proof-stat {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 14px 16px;
+      flex: 1;
+      text-align: center;
+    }
+
+    .proof-stat .stat-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 32px;
+      letter-spacing: 1px;
+      color: #FFD700;
+      line-height: 1;
+    }
+
+    .proof-stat .stat-label {
+      font-size: 10px;
+      color: rgba(255,255,255,0.45);
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    /* Reviews */
+    .reviews { display: flex; flex-direction: column; gap: 10px; }
+
+    .review-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 14px 16px;
+    }
+
+    .review-top {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .review-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #e63000, #ff8c00);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .review-name { font-size: 13px; font-weight: 800; }
+    .review-stars { font-size: 11px; color: #FFD700; }
+    .review-text { font-size: 13px; color: rgba(255,255,255,0.65); line-height: 1.5; }
+
+    /* ══ FOOTER BRAND ══ */
+    .footer-brand {
+      text-align: center;
+      padding: 30px 20px 20px;
+    }
+
+    .footer-brand .fb-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 36px;
+      letter-spacing: 4px;
+      color: rgba(255,255,255,0.25);
+    }
+
+    .footer-brand .fb-sub {
+      font-size: 11px;
+      color: rgba(255,255,255,0.15);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-top: 2px;
     }
   </style>
 </head>
 <body>
-  <div class="bg-dots"></div>
-  <div class="page">
 
-    <div class="badge-top">👀 Solo para quien tenga el flyer</div>
-
-    <p class="hook">Alguien guardó esto para ti</p>
-
-    <div class="offer-wrap">
-      <div class="offer-bg-text">GRATIS</div>
-      <div class="offer-main">PAPAS</div>
-      <div class="offer-item">🍟 GRATIS 🍟</div>
-    </div>
-
-    <div class="emoji-row">🔥🔥🔥</div>
-
-    <div class="card">
-      <p>
-        Con tu pedido de <span class="highlight">$250 o más</span><br>
-        Muestra esta pantalla al ordenar<br>
-        y listo ✅
-      </p>
-    </div>
-
-    <div class="urgency">
-      <div class="dot"></div>
-      Tiempo limitado · Quedan pocos
-    </div>
-
-    <a
-      href="https://wa.me/523123391898?text=Hola%2C%20vi%20el%20flyer%20y%20quiero%20pedir%20%F0%9F%8D%9F%20Papas%20gratis"
-      class="btn-wa"
-      target="_blank"
-      rel="noopener"
-    >
+  <!-- ══ BOTÓN FIJO WHATSAPP ══ -->
+  <div class="wa-sticky">
+    <a href="https://wa.me/523123391898?text=Hola%2C%20quiero%20pedir%20%F0%9F%8D%97%20y%20reclamar%20mis%20papas%20gratis" target="_blank" rel="noopener">
       <svg viewBox="0 0 24 24" fill="currentColor">
         <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
       </svg>
       ¡Quiero mis papas gratis!
     </a>
+  </div>
 
-    <div class="footer">
-      <span class="brand-name">MONCHIS</span>
-      <span class="brand-sub">Alitas a domicilio · 312 339 1898</span>
+  <!-- ══ HERO ══ -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-badge">🔥 Solo por tiempo limitado</div>
+    <!-- Reemplaza este emoji con tu foto: <img src="alitas.jpg" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"> -->
+    <div class="hero-food-emoji">🍗</div>
+    <div class="hero-content">
+      <p class="hero-hook">Alguien guardó esto para ti 👀</p>
+      <div class="hero-offer">PAPAS<br>GRATIS</div>
+      <div class="hero-item">🍟 con tu pedido</div>
+      <p class="hero-cond">Pedido mínimo <span>$250</span> · Muestra esta pantalla</p>
+      <div class="scroll-hint">ver más</div>
+    </div>
+  </section>
+
+  <!-- ══ BARRA URGENCIA ══ -->
+  <div class="urgency-bar">
+    <div class="urgency-dot"></div>
+    47 personas reclamaron esto hoy · Quedan pocas
+  </div>
+
+  <!-- ══ PRODUCTO ══ -->
+  <div class="section">
+    <p class="section-label">Lo que te espera</p>
+    <div class="section-title">Las alitas que<br>no puedes ignorar.</div>
+
+    <div class="food-grid">
+      <!-- Reemplaza cada div.food-card con una imagen tuya -->
+      <div class="food-card">🍗<div class="food-card-label">Alitas BBQ</div></div>
+      <div class="food-card">🔥<div class="food-card-label">Buffalo</div></div>
+      <div class="food-card">🧄<div class="food-card-label">Ajo parmesano</div></div>
+    </div>
+  </div>
+
+  <!-- ══ TARJETA OFERTA ══ -->
+  <div class="offer-card">
+    <p class="oc-pre">Tu regalo de hoy</p>
+    <div class="oc-main">PAPAS</div>
+    <div class="oc-item">GRATIS 🍟</div>
+    <div class="oc-cond">
+      Con cualquier pedido de $250 o más<br>
+      Muestra esta pantalla · Un uso por persona
+    </div>
+  </div>
+
+  <!-- ══ SOCIAL PROOF ══ -->
+  <div class="proof-section">
+    <div class="proof-counter">
+      <div class="proof-stat">
+        <div class="stat-num">4.9</div>
+        <div class="stat-label">⭐ Rating</div>
+      </div>
+      <div class="proof-stat">
+        <div class="stat-num">200+</div>
+        <div class="stat-label">Pedidos/semana</div>
+      </div>
+      <div class="proof-stat">
+        <div class="stat-num">30m</div>
+        <div class="stat-label">Entrega</div>
+      </div>
     </div>
 
+    <div class="reviews">
+      <div class="review-card">
+        <div class="review-top">
+          <div class="review-avatar">S</div>
+          <div>
+            <div class="review-name">Sandra M.</div>
+            <div class="review-stars">★★★★★</div>
+          </div>
+        </div>
+        <p class="review-text">"Las mejores alitas de Colima, no exagero. Ya pedí 3 veces esta semana 😭🍗"</p>
+      </div>
+      <div class="review-card">
+        <div class="review-top">
+          <div class="review-avatar">J</div>
+          <div>
+            <div class="review-name">Jorge R.</div>
+            <div class="review-stars">★★★★★</div>
+          </div>
+        </div>
+        <p class="review-text">"Llegaron calientes y con mucha salsa. Las papas gratis fueron un hit 🔥"</p>
+      </div>
+    </div>
   </div>
+
+  <!-- ══ FOOTER ══ -->
+  <div class="footer-brand">
+    <div class="fb-name">MONCHIS</div>
+    <div class="fb-sub">Alitas a domicilio · Colima</div>
+  </div>
+
 </body>
 </html>
