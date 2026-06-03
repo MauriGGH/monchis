@@ -4,504 +4,681 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
   <title>Monchis — Alitas a domicilio</title>
-  <meta property="og:title" content="👀 Algo te espera en Monchis">
-  <meta property="og:description" content="Papas gratis con tu pedido. Solo por hoy.">
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body {
-      font-family: 'Nunito', sans-serif;
-      background: #0f0400;
-      color: white;
-      overflow-x: hidden;
-      padding-bottom: 80px;
+    :root {
+      --red:    #e63000;
+      --orange: #ff6a00;
+      --gold:   #ffd000;
+      --dark:   #080200;
+      --dark2:  #100400;
+      --card:   #161008;
+      --border: rgba(255,255,255,0.07);
+      --text:   rgba(255,255,255,0.6);
     }
 
-    /* ══ BOTÓN FLOTANTE WHATSAPP ══ */
-    .wa-sticky {
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--dark);
+      color: #fff;
+      overflow-x: hidden;
+      padding-bottom: 76px;
+    }
+
+    /* ══ TIPOGRAFÍA ══ */
+    .anton { font-family: 'Anton', Impact, sans-serif; }
+
+    /* ══ BOTÓN FLOTANTE ══ */
+    .wa-float {
       position: fixed;
       bottom: 0; left: 0; right: 0;
-      z-index: 100;
-      padding: 12px 16px;
-      background: linear-gradient(to top, rgba(0,0,0,0.95), rgba(0,0,0,0.7));
+      z-index: 200;
+      background: rgba(8,2,0,0.92);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 10px 16px 10px;
       display: flex;
       justify-content: center;
     }
-    .wa-sticky a {
+    .wa-float a {
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 10px;
       width: 100%;
-      max-width: 420px;
-      padding: 16px 20px;
+      max-width: 440px;
+      padding: 15px 20px;
       background: #25D366;
-      border-radius: 50px;
-      font-size: 16px;
-      font-weight: 800;
-      color: white;
+      border-radius: 14px;
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
       text-decoration: none;
-      box-shadow: 0 6px 0 #1aab52, 0 10px 24px rgba(37,211,102,0.3);
-      transition: all 0.15s;
+      letter-spacing: 0.3px;
+      box-shadow: 0 4px 20px rgba(37,211,102,0.3);
+      transition: opacity 0.2s;
       -webkit-tap-highlight-color: transparent;
     }
-    .wa-sticky a:active { transform: translateY(3px); box-shadow: 0 3px 0 #1aab52; }
-    .wa-sticky svg { width: 22px; height: 22px; flex-shrink: 0; }
+    .wa-float a:active { opacity: 0.85; }
+    .wa-float svg { width: 20px; height: 20px; flex-shrink: 0; }
 
     /* ══ HERO ══ */
     .hero {
       position: relative;
-      min-height: 100svh;
+      height: 100svh;
+      min-height: 600px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: flex-end;
       text-align: center;
       overflow: hidden;
-      padding-bottom: 40px;
     }
 
     .hero-bg {
       position: absolute;
       inset: 0;
       background:
-        linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.88) 75%, #0f0400 100%),
-        url('img/alitas3.jpg') center/cover no-repeat;
+        url('img/alitas3.jpg') center 30% / cover no-repeat;
     }
-
-    /* Placeholder visual mientras no hay foto */
-    .hero-food-emoji {
+    .hero-overlay {
       position: absolute;
-      top: 8%;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: clamp(100px, 35vw, 180px);
-      filter: drop-shadow(0 20px 40px rgba(255,100,0,0.4));
-      animation: float 3s ease-in-out infinite;
-      pointer-events: none;
-    }
-    @keyframes float {
-      0%, 100% { transform: translateX(-50%) translateY(0); }
-      50% { transform: translateX(-50%) translateY(-12px); }
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(8,2,0,0.3)  0%,
+        rgba(8,2,0,0.1) 30%,
+        rgba(8,2,0,0.7) 65%,
+        rgba(8,2,0,1.0) 100%
+      );
     }
 
-    /* Badge superior */
-    .hero-badge {
+    .hero-logo {
       position: absolute;
       top: 20px;
       left: 50%;
       transform: translateX(-50%);
-      background: rgba(255,255,255,0.12);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255,255,255,0.2);
-      border-radius: 100px;
-      padding: 7px 20px;
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 1.5px;
-      white-space: nowrap;
+      width: 72px;
+      filter: drop-shadow(0 4px 16px rgba(0,0,0,0.7));
     }
 
-    .hero-content { position: relative; z-index: 1; padding: 0 20px; }
-
-    .hero-hook {
-      font-size: clamp(13px, 3.5vw, 16px);
-      font-weight: 700;
-      color: rgba(255,255,255,0.6);
-      letter-spacing: 1px;
-      margin-bottom: 8px;
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      padding: 0 24px 44px;
+      width: 100%;
     }
 
-    .hero-offer {
-      font-family: 'Bebas Neue', Impact, sans-serif;
-      font-size: clamp(68px, 22vw, 110px);
-      line-height: 0.88;
-      letter-spacing: 2px;
-      color: #fff;
-      text-shadow: 0 4px 30px rgba(255,100,0,0.5);
-      margin-bottom: 4px;
-    }
-
-    .hero-item {
-      font-family: 'Bebas Neue', Impact, sans-serif;
-      font-size: clamp(36px, 11vw, 56px);
+    .hero-eyebrow {
+      font-size: 11px;
+      font-weight: 600;
       letter-spacing: 4px;
-      color: #FFD700;
-      text-shadow: 0 2px 12px rgba(255,200,0,0.4);
-      margin-bottom: 20px;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      opacity: 0.9;
     }
 
-    .hero-cond {
-      font-size: clamp(13px, 3.5vw, 15px);
-      font-weight: 700;
+    .hero-title {
+      font-family: 'Anton', Impact, sans-serif;
+      font-size: clamp(64px, 20vw, 96px);
+      line-height: 0.9;
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+      text-shadow: 0 4px 24px rgba(0,0,0,0.5);
+    }
+
+    .hero-title .line2 {
+      color: var(--gold);
+      font-size: clamp(40px, 12vw, 58px);
+      letter-spacing: 5px;
+      display: block;
+    }
+
+    .hero-sub {
+      font-size: 14px;
+      font-weight: 500;
       color: rgba(255,255,255,0.55);
       margin-bottom: 28px;
+      letter-spacing: 0.3px;
     }
+    .hero-sub strong { color: rgba(255,255,255,0.85); }
 
-    .hero-cond span { color: #FFD700; }
-
-    .scroll-hint {
+    .hero-scroll {
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 6px;
-      color: rgba(255,255,255,0.3);
-      font-size: 10px;
-      letter-spacing: 3px;
+    }
+    .hero-scroll span {
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 4px;
+      color: rgba(255,255,255,0.25);
       text-transform: uppercase;
     }
-    .scroll-hint::after {
-      content: '';
+    .hero-scroll-line {
       width: 1px;
-      height: 28px;
-      background: linear-gradient(to bottom, rgba(255,255,255,0.3), transparent);
-      animation: drop 1.8s ease infinite;
+      height: 32px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.25), transparent);
+      animation: scrollline 2s ease-in-out infinite;
     }
-    @keyframes drop {
-      0% { opacity: 0; transform: scaleY(0); transform-origin: top; }
-      50% { opacity: 1; transform: scaleY(1); transform-origin: top; }
-      100% { opacity: 0; transform: scaleY(1); transform-origin: bottom; }
+    @keyframes scrollline {
+      0%   { transform: scaleY(0); transform-origin: top; opacity:0; }
+      50%  { transform: scaleY(1); transform-origin: top; opacity:1; }
+      100% { transform: scaleY(1); transform-origin: bottom; opacity:0; }
+    }
+
+    /* ══ REVEAL DEL CHISME ══ */
+    .reveal-section {
+      background: #fff;
+      color: #0a0200;
+      padding: 56px 24px;
+      text-align: center;
+    }
+
+    .reveal-tag {
+      display: inline-block;
+      background: #fff0e0;
+      color: var(--red);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 100px;
+      margin-bottom: 20px;
+    }
+
+    .reveal-title {
+      font-family: 'Anton', Impact, sans-serif;
+      font-size: clamp(32px, 9vw, 48px);
+      line-height: 1.1;
+      color: #0a0200;
+      margin-bottom: 12px;
+      letter-spacing: 1px;
+    }
+
+    .reveal-title .cross {
+      color: #ccc;
+      text-decoration: line-through;
+    }
+
+    .reveal-divider {
+      width: 48px;
+      height: 3px;
+      background: var(--red);
+      border-radius: 2px;
+      margin: 16px auto;
+    }
+
+    .reveal-body {
+      font-size: clamp(15px, 4vw, 18px);
+      font-weight: 400;
+      color: #444;
+      line-height: 1.7;
+      max-width: 360px;
+      margin: 0 auto;
+    }
+
+    .reveal-body strong {
+      color: #0a0200;
+      font-weight: 700;
+    }
+
+    /* ══ OFERTA ══ */
+    .offer-section {
+      padding: 0 16px 0;
+      margin-top: -2px;
+      background: #fff;
+    }
+
+    .offer-card {
+      background: linear-gradient(135deg, var(--red) 0%, var(--orange) 100%);
+      border-radius: 20px;
+      padding: 28px 22px;
+      text-align: center;
+      max-width: 440px;
+      margin: 0 auto;
+      box-shadow: 0 20px 50px rgba(230,48,0,0.25);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .offer-card::after {
+      content: '🍟';
+      position: absolute;
+      font-size: 140px;
+      right: -24px;
+      bottom: -24px;
+      opacity: 0.12;
+      pointer-events: none;
+    }
+
+    .oc-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 4px;
+      color: rgba(255,255,255,0.7);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .oc-big {
+      font-family: 'Anton', Impact, sans-serif;
+      font-size: clamp(52px, 16vw, 72px);
+      line-height: 0.88;
+      letter-spacing: 2px;
+      color: #fff;
+      text-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      margin-bottom: 4px;
+    }
+
+    .oc-item {
+      font-family: 'Anton', Impact, sans-serif;
+      font-size: clamp(24px, 7vw, 32px);
+      letter-spacing: 4px;
+      color: var(--gold);
+      margin-bottom: 18px;
+    }
+
+    .oc-pill {
+      display: inline-block;
+      background: rgba(0,0,0,0.2);
+      border-radius: 10px;
+      padding: 10px 18px;
+      font-size: 12px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.85);
+      line-height: 1.6;
     }
 
     /* ══ URGENCIA ══ */
-    .urgency-bar {
-      background: #e63000;
-      padding: 12px 20px;
-      text-align: center;
-      font-size: 13px;
-      font-weight: 800;
-      letter-spacing: 1px;
+    .urgency-row {
+      background: #fff;
+      padding: 20px 24px 32px;
       display: flex;
-      align-items: center;
       justify-content: center;
+    }
+
+    .urgency-chip {
+      display: inline-flex;
+      align-items: center;
       gap: 8px;
+      background: #fff5f0;
+      border: 1.5px solid #ffd0b0;
+      border-radius: 100px;
+      padding: 8px 18px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--red);
     }
+
     .urgency-dot {
-      width: 8px; height: 8px;
+      width: 7px; height: 7px;
       border-radius: 50%;
-      background: #FFD700;
+      background: var(--red);
       animation: blink 1s ease infinite;
-      flex-shrink: 0;
     }
-    @keyframes blink {
-      0%, 100% { opacity: 1; } 50% { opacity: 0.2; }
+    @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.2;} }
+
+    /* ══ SEPARADOR ══ */
+    .wave-sep {
+      width: 100%;
+      overflow: hidden;
+      line-height: 0;
+      background: #fff;
+    }
+    .wave-sep svg { display: block; width: 100%; }
+
+    /* ══ PRODUCTO ══ */
+    .product-section {
+      background: var(--dark2);
+      padding: 48px 20px 40px;
     }
 
-    /* ══ SECCIÓN PRODUCTO ══ */
-    .section { padding: 40px 20px; max-width: 480px; margin: 0 auto; }
+    .section-header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
 
-    .section-label {
-      font-size: 11px;
+    .section-tag {
+      font-size: 10px;
+      font-weight: 700;
       letter-spacing: 4px;
-      color: #e63000;
+      color: var(--red);
       text-transform: uppercase;
-      font-weight: 800;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
     .section-title {
-      font-family: 'Bebas Neue', Impact, sans-serif;
-      font-size: clamp(38px, 12vw, 52px);
-      letter-spacing: 2px;
-      line-height: 1;
-      margin-bottom: 16px;
+      font-family: 'Anton', Impact, sans-serif;
+      font-size: clamp(30px, 9vw, 42px);
+      letter-spacing: 1px;
+      line-height: 1.1;
     }
 
-    /* Grid de fotos */
+    /* Grid fotos */
     .food-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
-      margin-bottom: 16px;
+      max-width: 440px;
+      margin: 0 auto;
     }
 
-    .food-card {
-      border-radius: 12px;
+    .food-item {
+      border-radius: 14px;
       overflow: hidden;
-      aspect-ratio: 1;
       position: relative;
-      background: linear-gradient(145deg, #3d1200, #7a2500) center/cover no-repeat;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 48px;
+      aspect-ratio: 1;
+      background: var(--card) center/cover no-repeat;
     }
-    .food-card.f1 { background-image: url('img/alitas1.jpg'); }
-    .food-card.f2 { background-image: url('img/alitas2.jpg'); }
-    .food-card.f3 { background-image: url('img/alitas3.jpg'); }
 
-    .food-card:first-child {
+    .food-item.wide {
       grid-column: 1 / -1;
-      aspect-ratio: 16/9;
-      font-size: 72px;
+      aspect-ratio: 16/8;
     }
 
-    .food-card-label {
+    .food-item.f1 { background-image: url('img/alitas1.jpg'); }
+    .food-item.f2 { background-image: url('img/alitas2.jpg'); }
+    .food-item.f3 { background-image: url('img/alitas3.jpg'); }
+
+    .food-item-label {
       position: absolute;
       bottom: 0; left: 0; right: 0;
-      background: linear-gradient(transparent, rgba(0,0,0,0.8));
-      padding: 20px 12px 10px;
+      background: linear-gradient(transparent, rgba(0,0,0,0.75));
+      padding: 24px 12px 10px;
       font-size: 13px;
-      font-weight: 800;
-      letter-spacing: 1px;
-    }
-
-    /* ══ TARJETA DE OFERTA ══ */
-    .offer-card {
-      background: linear-gradient(135deg, #e63000, #ff8c00);
-      border-radius: 20px;
-      padding: 24px 20px;
-      text-align: center;
-      margin: 0 20px 20px;
-      max-width: 440px;
-      margin-left: auto;
-      margin-right: auto;
-      box-shadow: 0 16px 40px rgba(230,48,0,0.35);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .offer-card::before {
-      content: '🍟';
-      position: absolute;
-      font-size: 120px;
-      right: -20px;
-      bottom: -20px;
-      opacity: 0.15;
-      pointer-events: none;
-    }
-
-    .offer-card .oc-pre {
-      font-size: 11px;
-      letter-spacing: 4px;
-      color: rgba(255,255,255,0.7);
-      text-transform: uppercase;
       font-weight: 700;
-      margin-bottom: 4px;
-    }
-
-    .offer-card .oc-main {
-      font-family: 'Bebas Neue', Impact, sans-serif;
-      font-size: clamp(44px, 14vw, 60px);
-      letter-spacing: 2px;
-      line-height: 1;
-      margin-bottom: 4px;
-    }
-
-    .offer-card .oc-item {
-      font-family: 'Bebas Neue', Impact, sans-serif;
-      font-size: clamp(28px, 9vw, 38px);
-      letter-spacing: 3px;
-      color: rgba(255,255,255,0.9);
-      margin-bottom: 14px;
-    }
-
-    .offer-card .oc-cond {
-      font-size: 12px;
-      font-weight: 700;
-      color: rgba(255,255,255,0.75);
-      background: rgba(0,0,0,0.2);
-      border-radius: 8px;
-      padding: 8px 14px;
-      line-height: 1.5;
+      letter-spacing: 0.5px;
     }
 
     /* ══ SOCIAL PROOF ══ */
     .proof-section {
-      padding: 20px 20px 10px;
-      max-width: 480px;
-      margin: 0 auto;
+      background: var(--dark);
+      padding: 40px 20px;
     }
 
-    .proof-counter {
+    .stats-row {
       display: flex;
       gap: 10px;
-      justify-content: center;
-      margin-bottom: 20px;
+      max-width: 440px;
+      margin: 0 auto 28px;
     }
 
-    .proof-stat {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 12px;
-      padding: 14px 16px;
+    .stat-box {
       flex: 1;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px 8px;
       text-align: center;
     }
 
-    .proof-stat .stat-num {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 32px;
+    .stat-num {
+      font-family: 'Anton', Impact, sans-serif;
+      font-size: 28px;
       letter-spacing: 1px;
-      color: #FFD700;
+      color: var(--gold);
       line-height: 1;
     }
 
-    .proof-stat .stat-label {
+    .stat-label {
       font-size: 10px;
-      color: rgba(255,255,255,0.45);
-      font-weight: 700;
+      font-weight: 600;
+      color: rgba(255,255,255,0.35);
       letter-spacing: 1px;
       text-transform: uppercase;
-      margin-top: 2px;
+      margin-top: 4px;
     }
 
     /* Reviews */
-    .reviews { display: flex; flex-direction: column; gap: 10px; }
-
-    .review-card {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 14px;
-      padding: 14px 16px;
-    }
-
-    .review-top {
+    .reviews-list {
       display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 6px;
+      flex-direction: column;
+      gap: 10px;
+      max-width: 440px;
+      margin: 0 auto;
     }
 
-    .review-avatar {
-      width: 36px; height: 36px;
+    .review {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .review-av {
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #e63000, #ff8c00);
+      background: linear-gradient(135deg, var(--red), var(--orange));
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 16px;
+      font-size: 15px;
+      font-weight: 700;
       flex-shrink: 0;
+      color: #fff;
     }
 
-    .review-name { font-size: 13px; font-weight: 800; }
-    .review-stars { font-size: 11px; color: #FFD700; }
-    .review-text { font-size: 13px; color: rgba(255,255,255,0.65); line-height: 1.5; }
-
-    /* ══ FOOTER BRAND ══ */
-    .footer-brand {
-      text-align: center;
-      padding: 30px 20px 20px;
+    .review-body {}
+    .review-name {
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 2px;
     }
-
-    .footer-brand .fb-name {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 36px;
-      letter-spacing: 4px;
-      color: rgba(255,255,255,0.25);
-    }
-
-    .footer-brand .fb-sub {
+    .review-stars {
       font-size: 11px;
-      color: rgba(255,255,255,0.15);
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      margin-top: 2px;
+      color: var(--gold);
+      margin-bottom: 6px;
     }
+    .review-text {
+      font-size: 13px;
+      color: rgba(255,255,255,0.55);
+      line-height: 1.55;
+    }
+
+    /* ══ FOOTER ══ */
+    .footer {
+      background: var(--dark);
+      border-top: 1px solid var(--border);
+      padding: 28px 20px;
+      text-align: center;
+    }
+
+    .footer img {
+      width: 60px;
+      opacity: 0.5;
+      margin-bottom: 8px;
+    }
+
+    .footer p {
+      font-size: 11px;
+      color: rgba(255,255,255,0.2);
+      letter-spacing: 1px;
+    }
+
+    /* ══ ANIMACIONES SCROLL ══ */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+    .fade-up.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .fade-up.delay-1 { transition-delay: 0.1s; }
+    .fade-up.delay-2 { transition-delay: 0.2s; }
+    .fade-up.delay-3 { transition-delay: 0.3s; }
   </style>
 </head>
 <body>
 
-  <!-- ══ BOTÓN FIJO WHATSAPP ══ -->
-  <div class="wa-sticky">
-    <a href="https://wa.me/523123391898?text=Hola%2C%20quiero%20pedir%20%F0%9F%8D%97%20y%20reclamar%20mis%20papas%20gratis" target="_blank" rel="noopener">
-      <svg viewBox="0 0 24 24" fill="currentColor">
-        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-      </svg>
-      ¡Quiero mis papas gratis!
+  <!-- ══ BOTÓN FIJO ══ -->
+  <div class="wa-float">
+    <a href="https://wa.me/523123391898?text=Hola%2C%20quiero%20pedir%20y%20reclamar%20mis%20papas%20gratis%20%F0%9F%8D%9F" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Pedir ahora — papas gratis incluidas
     </a>
   </div>
 
   <!-- ══ HERO ══ -->
   <section class="hero">
     <div class="hero-bg"></div>
-    <div class="hero-badge">🔥 Solo por tiempo limitado</div>
+    <div class="hero-overlay"></div>
+    <img class="hero-logo" src="img/logo.png" alt="Monchis">
     <div class="hero-content">
-      <img src="img/logo.png" style="width:90px;margin-bottom:10px;filter:drop-shadow(0 4px 12px rgba(0,0,0,0.6));">
-      <p class="hero-hook">Alguien guardó esto para ti 👀</p>
-      <div class="hero-offer">PAPAS<br>GRATIS</div>
-      <div class="hero-item">🍟 con tu pedido</div>
-      <p class="hero-cond">Pedido mínimo <span>$250</span> · Muestra esta pantalla</p>
-      <div class="scroll-hint">ver más</div>
+      <p class="hero-eyebrow">👀 Solo para quien tenga el flyer</p>
+      <div class="hero-title anton">
+        PAPAS<br>
+        <span class="line2">GRATIS</span>
+      </div>
+      <p class="hero-sub">Con tu pedido de <strong>$250 o más</strong> · Tiempo limitado</p>
+      <div class="hero-scroll">
+        <span>ver más</span>
+        <div class="hero-scroll-line"></div>
+      </div>
     </div>
   </section>
 
-  <!-- ══ BARRA URGENCIA ══ -->
-  <div class="urgency-bar">
-    <div class="urgency-dot"></div>
-    47 personas reclamaron esto hoy · Quedan pocas
+  <!-- ══ REVEAL CHISME ══ -->
+  <section class="reveal-section">
+    <div class="fade-up">
+      <div class="reveal-tag">La verdad</div>
+    </div>
+    <div class="fade-up delay-1">
+      <h2 class="reveal-title">
+        El chisme<br>
+        <span class="cross">no existe.</span>
+      </h2>
+      <div class="reveal-divider"></div>
+    </div>
+    <div class="fade-up delay-2">
+      <p class="reveal-body">
+        No viniste a ver lo que esperabas.<br>
+        Pero al menos <strong>no te vas con las manos vacías.</strong><br><br>
+        Llegaste justo a tiempo para algo mejor.
+      </p>
+    </div>
+  </section>
+
+  <!-- ══ OFERTA ══ -->
+  <section class="offer-section">
+    <div class="offer-card fade-up" style="margin-bottom:0; border-radius: 20px 20px 0 0;">
+      <p class="oc-label">Tu premio por la curiosidad</p>
+      <div class="oc-big anton">PAPAS</div>
+      <div class="oc-item anton">GRATIS 🍟</div>
+      <div class="oc-pill">
+        Pedido mínimo $250 · Muestra esta pantalla<br>Un uso por persona
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ URGENCIA ══ -->
+  <div class="urgency-row">
+    <div class="urgency-chip fade-up">
+      <div class="urgency-dot"></div>
+      Quedan pocas · Solo por tiempo limitado
+    </div>
+  </div>
+
+  <!-- SEPARADOR WAVE -->
+  <div class="wave-sep">
+    <svg viewBox="0 0 1440 48" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+      <path d="M0,48 L0,24 Q180,0 360,24 Q540,48 720,24 Q900,0 1080,24 Q1260,48 1440,24 L1440,48 Z" fill="#100400"/>
+    </svg>
   </div>
 
   <!-- ══ PRODUCTO ══ -->
-  <div class="section">
-    <p class="section-label">Lo que te espera</p>
-    <div class="section-title">Las alitas que<br>no puedes ignorar.</div>
-
-    <div class="food-grid">
-      <div class="food-card f1"><div class="food-card-label">Alitas BBQ</div></div>
-      <div class="food-card f2"><div class="food-card-label">A la parrilla</div></div>
-      <div class="food-card f3"><div class="food-card-label">Con papas 🍟</div></div>
+  <section class="product-section">
+    <div class="section-header fade-up">
+      <p class="section-tag">Lo que te espera</p>
+      <h2 class="section-title anton">Las alitas que<br>no puedes ignorar.</h2>
     </div>
-  </div>
-
-  <!-- ══ TARJETA OFERTA ══ -->
-  <div class="offer-card">
-    <p class="oc-pre">Tu regalo de hoy</p>
-    <div class="oc-main">PAPAS</div>
-    <div class="oc-item">GRATIS 🍟</div>
-    <div class="oc-cond">
-      Con cualquier pedido de $250 o más<br>
-      Muestra esta pantalla · Un uso por persona
+    <div class="food-grid fade-up delay-1">
+      <div class="food-item wide f1"><div class="food-item-label">Alitas BBQ</div></div>
+      <div class="food-item f2"><div class="food-item-label">Con papas 🍟</div></div>
+      <div class="food-item f3"><div class="food-item-label">A la parrilla 🔥</div></div>
     </div>
-  </div>
+  </section>
 
   <!-- ══ SOCIAL PROOF ══ -->
-  <div class="proof-section">
-    <div class="proof-counter">
-      <div class="proof-stat">
+  <section class="proof-section">
+    <div class="section-header fade-up">
+      <p class="section-tag">Por qué elegirnos</p>
+      <h2 class="section-title anton">La gente ya habló.</h2>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-box fade-up">
         <div class="stat-num">4.9</div>
         <div class="stat-label">⭐ Rating</div>
       </div>
-      <div class="proof-stat">
+      <div class="stat-box fade-up delay-1">
         <div class="stat-num">200+</div>
-        <div class="stat-label">Pedidos/semana</div>
+        <div class="stat-label">Pedidos / sem.</div>
       </div>
-      <div class="proof-stat">
-        <div class="stat-num">30m</div>
+      <div class="stat-box fade-up delay-2">
+        <div class="stat-num">~30m</div>
         <div class="stat-label">Entrega</div>
       </div>
     </div>
 
-    <div class="reviews">
-      <div class="review-card">
-        <div class="review-top">
-          <div class="review-avatar">S</div>
-          <div>
-            <div class="review-name">Sandra M.</div>
-            <div class="review-stars">★★★★★</div>
-          </div>
+    <div class="reviews-list">
+      <div class="review fade-up">
+        <div class="review-av">S</div>
+        <div class="review-body">
+          <div class="review-name">Sandra M.</div>
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text">"Las mejores alitas de Colima, no exagero. Ya pedí 3 veces esta semana 😭🍗"</p>
         </div>
-        <p class="review-text">"Las mejores alitas de Colima, no exagero. Ya pedí 3 veces esta semana 😭🍗"</p>
       </div>
-      <div class="review-card">
-        <div class="review-top">
-          <div class="review-avatar">J</div>
-          <div>
-            <div class="review-name">Jorge R.</div>
-            <div class="review-stars">★★★★★</div>
-          </div>
+      <div class="review fade-up delay-1">
+        <div class="review-av">J</div>
+        <div class="review-body">
+          <div class="review-name">Jorge R.</div>
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text">"Llegaron calientes y bien salsudas. Las papas gratis sellaron el trato 🔥"</p>
         </div>
-        <p class="review-text">"Llegaron calientes y con mucha salsa. Las papas gratis fueron un hit 🔥"</p>
+      </div>
+      <div class="review fade-up delay-2">
+        <div class="review-av">A</div>
+        <div class="review-body">
+          <div class="review-name">Ana L.</div>
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text">"Rápido, rico y el precio buenísimo. Ya no pido en otro lugar 🙌"</p>
+        </div>
       </div>
     </div>
-  </div>
+  </section>
 
   <!-- ══ FOOTER ══ -->
-  <div class="footer-brand">
-    <div class="fb-name">MONCHIS</div>
-    <div class="fb-sub">Alitas a domicilio · Colima</div>
-  </div>
+  <footer class="footer">
+    <img src="img/logo.png" alt="Monchis">
+    <p>Monchis · Alitas a domicilio · Colima<br>312 339 1898</p>
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('show');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+  </script>
 
 </body>
 </html>
