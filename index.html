@@ -2,587 +2,186 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-  <title>Sofía — No abras esto.</title>
-  <meta property="og:title" content="Sofía — No abras esto.">
-  <meta property="og:description" content="Alguien dejó algo para ti. Pero dijeron que no lo compartieras.">
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Monchis — Algo es tuyo</title>
+  <meta property="og:title" content="Alguien guardó esto para ti">
+  <meta property="og:description" content="Tienes algo gratis esperándote. Entra antes de que expire.">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-    :root {
-      --red: #c0392b;
-      --orange: #e67e22;
-      --dark: #0a0a0a;
-      --mid: #111;
-      --warm: #1a0800;
-    }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      background: var(--dark);
-      color: white;
+    html, body {
+      height: 100%;
+      background: #100400;
+      color: #fff;
       font-family: 'Inter', sans-serif;
-      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
     }
 
-    /* ────── SECCIÓN 1: EL GANCHO ────── */
-    #hook {
+    .page {
       min-height: 100svh;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding: 40px 24px;
-      position: relative;
-      overflow: hidden;
-      background: radial-gradient(ellipse at 50% 60%, #1a0200 0%, #0a0000 70%);
+      padding: 40px 28px;
+      background:
+        radial-gradient(ellipse at 50% 0%, rgba(180,40,0,0.18) 0%, transparent 60%),
+        radial-gradient(ellipse at 50% 100%, rgba(230,100,0,0.1) 0%, transparent 50%),
+        #0e0300;
+      gap: 0;
     }
 
-    #hook::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse at 50% 50%, rgba(192,57,43,0.08) 0%, transparent 70%);
-      animation: pulse-bg 4s ease-in-out infinite;
-    }
-
-    @keyframes pulse-bg {
-      0%, 100% { opacity: 0.5; }
-      50% { opacity: 1; }
-    }
-
-    .hook-tag {
-      font-size: 10px;
-      letter-spacing: 5px;
-      color: rgba(255,255,255,0.25);
+    .brand {
+      font-size: 11px;
+      letter-spacing: 6px;
+      color: rgba(255,140,0,0.5);
       text-transform: uppercase;
       margin-bottom: 32px;
-      animation: fade-in 1s ease 0.3s both;
     }
 
-    .hook-name {
-      font-family: 'Playfair Display', Georgia, serif;
-      font-size: clamp(72px, 22vw, 140px);
-      font-weight: 900;
-      line-height: 0.9;
-      letter-spacing: -3px;
-      color: #fff;
-      animation: fade-in 1.2s ease 0.6s both;
-      text-shadow:
-        0 0 80px rgba(192,57,43,0.4),
-        0 0 160px rgba(192,57,43,0.15);
-    }
-
-    .hook-rule {
-      width: 60px;
-      height: 1px;
-      background: rgba(192,57,43,0.6);
-      margin: 28px auto;
-      animation: expand-line 1s ease 1.2s both;
-    }
-
-    @keyframes expand-line {
-      from { width: 0; opacity: 0; }
-      to { width: 60px; opacity: 1; }
-    }
-
-    .hook-sub {
-      font-size: clamp(16px, 4vw, 20px);
-      font-weight: 300;
-      color: rgba(255,255,255,0.6);
-      letter-spacing: 1px;
-      line-height: 1.6;
-      max-width: 340px;
-      animation: fade-in 1s ease 1.5s both;
-    }
-
-    .hook-sub strong {
-      color: rgba(255,255,255,0.9);
-      font-weight: 400;
-    }
-
-    .hook-warning {
-      margin-top: 20px;
-      font-size: 12px;
-      letter-spacing: 2px;
-      color: rgba(192,57,43,0.7);
-      text-transform: uppercase;
-      animation: fade-in 1s ease 1.8s both;
-    }
-
-    .hook-cta {
-      margin-top: 48px;
-      animation: fade-in 1s ease 2.2s both;
-    }
-
-    .btn-ghost {
-      display: inline-block;
-      padding: 14px 36px;
-      border: 1px solid rgba(255,255,255,0.2);
-      border-radius: 2px;
-      font-size: 13px;
-      letter-spacing: 3px;
-      color: rgba(255,255,255,0.7);
-      text-transform: uppercase;
-      text-decoration: none;
-      cursor: pointer;
-      background: transparent;
-      transition: all 0.3s ease;
-    }
-
-    .btn-ghost:hover, .btn-ghost:active {
-      border-color: rgba(255,255,255,0.6);
-      color: white;
-      background: rgba(255,255,255,0.05);
-    }
-
-    .scroll-hint {
-      position: absolute;
-      bottom: 28px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-      animation: fade-in 1s ease 3s both;
-    }
-
-    .scroll-hint span {
-      font-size: 9px;
-      letter-spacing: 3px;
-      color: rgba(255,255,255,0.2);
-      text-transform: uppercase;
-    }
-
-    .scroll-line {
-      width: 1px;
-      height: 32px;
-      background: linear-gradient(to bottom, rgba(255,255,255,0.3), transparent);
-      animation: scroll-drop 2s ease-in-out 3s infinite;
-    }
-
-    @keyframes scroll-drop {
-      0% { transform: scaleY(0); transform-origin: top; opacity: 0; }
-      50% { transform: scaleY(1); transform-origin: top; opacity: 1; }
-      100% { transform: scaleY(1); transform-origin: bottom; opacity: 0; }
-    }
-
-    /* ────── SECCIÓN 2: TENSIÓN ────── */
-    #tension {
-      min-height: 100svh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 60px 24px;
-      background: #0a0a0a;
-      position: relative;
-    }
-
-    .tension-eyebrow {
-      font-size: 11px;
-      letter-spacing: 4px;
-      color: rgba(255,255,255,0.2);
-      text-transform: uppercase;
-      margin-bottom: 40px;
-    }
-
-    .tension-q {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(28px, 8vw, 48px);
-      font-weight: 700;
-      line-height: 1.2;
-      max-width: 420px;
-      margin-bottom: 24px;
-      color: rgba(255,255,255,0.9);
-    }
-
-    .tension-q em {
-      font-style: italic;
-      color: rgba(192,57,43,0.9);
-    }
-
-    .tension-body {
-      font-size: clamp(14px, 3.5vw, 16px);
+    .hook {
+      font-size: clamp(13px, 3.5vw, 16px);
       font-weight: 300;
       color: rgba(255,255,255,0.45);
-      max-width: 360px;
-      line-height: 1.8;
-      margin-bottom: 48px;
+      letter-spacing: 0.5px;
+      margin-bottom: 16px;
     }
 
-    .tension-body strong {
-      color: rgba(255,255,255,0.75);
-      font-weight: 400;
-    }
-
-    .btn-reveal {
-      display: inline-block;
-      padding: 16px 40px;
-      background: var(--red);
-      border-radius: 2px;
-      font-size: 12px;
-      letter-spacing: 3px;
-      color: white;
+    .offer-label {
+      font-size: clamp(11px, 2.5vw, 13px);
+      letter-spacing: 5px;
+      color: rgba(255,140,0,0.6);
       text-transform: uppercase;
-      text-decoration: none;
-      cursor: pointer;
-      border: none;
-      transition: all 0.3s ease;
-      box-shadow: 0 8px 32px rgba(192,57,43,0.3);
+      margin-bottom: 8px;
     }
 
-    .btn-reveal:hover, .btn-reveal:active {
-      background: #a93226;
-      box-shadow: 0 8px 40px rgba(192,57,43,0.5);
-      transform: translateY(-1px);
+    .offer-main {
+      font-family: 'Oswald', Impact, sans-serif;
+      font-size: clamp(76px, 24vw, 120px);
+      font-weight: 700;
+      line-height: 0.85;
+      color: #fff;
+      text-shadow:
+        0 0 60px rgba(220,80,0,0.35),
+        0 4px 0 rgba(0,0,0,0.4);
+      letter-spacing: -2px;
+      margin-bottom: 16px;
     }
 
-    /* ────── SECCIÓN 3: EL REVEAL ────── */
-    #reveal {
-      min-height: 100svh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 60px 24px;
-      background: linear-gradient(180deg, #0a0a0a 0%, var(--warm) 100%);
-      position: relative;
-      overflow: hidden;
-    }
-
-    #reveal::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse at 50% 80%, rgba(230,126,34,0.1) 0%, transparent 60%);
-    }
-
-    .reveal-content { position: relative; z-index: 1; }
-
-    .reveal-pre {
-      font-size: 13px;
-      letter-spacing: 3px;
-      color: rgba(230,126,34,0.7);
-      text-transform: uppercase;
+    .offer-item {
+      font-size: clamp(20px, 6vw, 30px);
+      font-weight: 600;
+      color: rgba(255,255,255,0.85);
+      letter-spacing: 2px;
       margin-bottom: 24px;
     }
 
-    .reveal-headline {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(32px, 9vw, 56px);
-      font-weight: 900;
-      line-height: 1.1;
-      color: #fff;
-      margin-bottom: 16px;
-      max-width: 400px;
+    .divider {
+      width: 40px;
+      height: 1px;
+      background: rgba(255,140,0,0.35);
+      margin: 0 auto 20px;
     }
 
-    .reveal-sub {
-      font-size: clamp(14px, 3.5vw, 17px);
+    .condition {
+      font-size: clamp(12px, 3vw, 14px);
       font-weight: 300;
-      color: rgba(255,255,255,0.5);
-      max-width: 340px;
+      color: rgba(255,255,255,0.35);
       line-height: 1.7;
-      margin-bottom: 48px;
+      margin-bottom: 12px;
     }
 
-    .reveal-sub strong {
-      color: rgba(255,255,255,0.85);
-      font-weight: 600;
-    }
-
-    /* ────── CUPÓN ────── */
-    .coupon-wrap {
-      width: 100%;
-      max-width: 360px;
-      margin: 0 auto 40px;
-      position: relative;
-    }
-
-    .coupon {
-      background: #fff;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow:
-        0 20px 60px rgba(0,0,0,0.5),
-        0 0 0 1px rgba(255,255,255,0.05);
-    }
-
-    .coupon-top {
-      background: linear-gradient(135deg, #c0392b, #e67e22);
-      padding: 24px 24px 20px;
-      text-align: center;
-    }
-
-    .coupon-top .ct-pre {
-      font-size: 10px;
-      letter-spacing: 4px;
-      color: rgba(255,255,255,0.8);
-      text-transform: uppercase;
-      margin-bottom: 6px;
-    }
-
-    .coupon-top .ct-name {
-      font-family: 'Playfair Display', serif;
-      font-size: 42px;
-      font-weight: 900;
-      color: #fff;
-      line-height: 1;
-      text-shadow: 0 2px 8px rgba(0,0,0,0.3);
-    }
-
-    .coupon-top .ct-item {
-      font-size: 18px;
-      font-weight: 600;
-      color: rgba(255,255,255,0.9);
-      margin-top: 4px;
-      letter-spacing: 1px;
-    }
-
-    .coupon-bottom {
-      background: #fff;
-      padding: 18px 24px;
-      display: flex;
+    .urgency {
+      display: inline-flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-    }
-
-    .cb-brand {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .cb-brand .cb-name {
-      font-family: 'Playfair Display', serif;
-      font-size: 22px;
-      font-weight: 900;
-      color: #1a0800;
-      line-height: 1;
-    }
-
-    .cb-brand .cb-sub {
-      font-size: 10px;
+      gap: 6px;
+      font-size: 11px;
       letter-spacing: 2px;
-      color: #999;
+      color: rgba(220,80,0,0.8);
       text-transform: uppercase;
-      margin-top: 3px;
+      margin-bottom: 36px;
     }
 
-    .cb-cond {
-      font-size: 10px;
-      color: #bbb;
-      text-align: right;
-      line-height: 1.5;
-      max-width: 130px;
-    }
-
-    /* Perforación del cupón */
-    .coupon-perforation {
-      display: flex;
-      align-items: center;
-      gap: 0;
-      overflow: hidden;
-    }
-
-    .coupon-perforation .circle {
-      width: 16px;
-      height: 16px;
+    .urgency::before {
+      content: '';
+      width: 6px;
+      height: 6px;
       border-radius: 50%;
-      background: var(--dark);
-      flex-shrink: 0;
+      background: rgba(220,80,0,0.9);
+      animation: blink 1.4s ease-in-out infinite;
     }
 
-    .coupon-perforation .dashes {
-      flex: 1;
-      border-top: 1.5px dashed #ddd;
-      margin: 0 4px;
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.2; }
     }
 
-    /* ────── CTA FINAL ────── */
-    .final-cta {
-      width: 100%;
-      max-width: 360px;
-      margin: 0 auto;
-    }
-
-    .btn-whatsapp {
+    .btn-wa {
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 10px;
       width: 100%;
-      padding: 18px 24px;
+      max-width: 320px;
+      padding: 17px 24px;
       background: #25D366;
-      border-radius: 8px;
+      border-radius: 50px;
       font-size: 15px;
       font-weight: 600;
-      color: white;
+      color: #fff;
       text-decoration: none;
-      letter-spacing: 0.5px;
-      transition: all 0.3s ease;
-      box-shadow: 0 8px 32px rgba(37,211,102,0.25);
+      letter-spacing: 0.3px;
+      box-shadow: 0 8px 30px rgba(37,211,102,0.25);
+      transition: all 0.25s ease;
+      -webkit-tap-highlight-color: transparent;
     }
 
-    .btn-whatsapp:hover, .btn-whatsapp:active {
-      background: #1ebe5d;
-      box-shadow: 0 8px 40px rgba(37,211,102,0.4);
-      transform: translateY(-1px);
+    .btn-wa:active {
+      transform: scale(0.97);
+      box-shadow: 0 4px 16px rgba(37,211,102,0.3);
     }
 
-    .btn-whatsapp svg {
-      width: 20px;
-      height: 20px;
-      flex-shrink: 0;
-    }
+    .btn-wa svg { width: 20px; height: 20px; flex-shrink: 0; }
 
-    .final-note {
-      margin-top: 16px;
+    .footer-note {
+      margin-top: 20px;
       font-size: 11px;
-      color: rgba(255,255,255,0.25);
-      letter-spacing: 1px;
-      line-height: 1.6;
-    }
-
-    /* ────── ANIMACIONES ────── */
-    @keyframes fade-in {
-      from { opacity: 0; transform: translateY(16px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .reveal-on-scroll {
-      opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 0.8s ease, transform 0.8s ease;
-    }
-
-    .reveal-on-scroll.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* ────── RESPONSIVE ────── */
-    @media (max-width: 380px) {
-      .coupon-bottom { flex-direction: column; text-align: center; }
-      .cb-cond { text-align: center; max-width: 100%; }
+      color: rgba(255,255,255,0.18);
+      letter-spacing: 0.5px;
+      line-height: 1.7;
     }
   </style>
 </head>
 <body>
-
-  <!-- ══ SECCIÓN 1: GANCHO ══ -->
-  <section id="hook">
-    <p class="hook-tag">Mensaje privado</p>
-    <h1 class="hook-name">SOFÍA</h1>
-    <div class="hook-rule"></div>
-    <p class="hook-sub">
-      Alguien dejó algo para ti.<br>
-      <strong>Pero dijeron que no lo compartieras.</strong>
+  <div class="page">
+    <p class="brand">— Monchis —</p>
+    <p class="hook">Alguien guardó esto para ti.</p>
+    <p class="offer-label">Tienes</p>
+    <div class="offer-main">PAPAS<br>GRATIS</div>
+    <p class="offer-item">🍟 100% gratis</p>
+    <div class="divider"></div>
+    <p class="condition">
+      Con cualquier pedido de $250 o más<br>
+      Muestra esta pantalla al ordenar
     </p>
-    <p class="hook-warning">⚠ No era para ojos ajenos</p>
-    <div class="hook-cta">
-      <a href="#tension" class="btn-ghost">Ver de todas formas</a>
-    </div>
-    <div class="scroll-hint">
-      <span>Scroll</span>
-      <div class="scroll-line"></div>
-    </div>
-  </section>
-
-  <!-- ══ SECCIÓN 2: TENSIÓN ══ -->
-  <section id="tension">
-    <p class="tension-eyebrow reveal-on-scroll">Un momento</p>
-    <h2 class="tension-q reveal-on-scroll">
-      ¿No eres <em>Sofía</em>?
-    </h2>
-    <p class="tension-body reveal-on-scroll">
-      No importa.<br>
-      Si llegaste hasta aquí es porque <strong>la curiosidad pudo más</strong>.<br><br>
-      Y eso tiene recompensa.
+    <span class="urgency">Solo por tiempo limitado</span>
+    <a
+      href="https://wa.me/523123391898?text=Hola%2C%20vi%20el%20flyer%20y%20quiero%20pedir%20%F0%9F%8D%9F%20Papas%20gratis"
+      class="btn-wa"
+      target="_blank"
+      rel="noopener"
+    >
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+      </svg>
+      Reclamar por WhatsApp
+    </a>
+    <p class="footer-note">
+      312 339 1898 · Monchis Colima<br>
+      Alitas a domicilio
     </p>
-    <a href="#reveal" class="btn-reveal reveal-on-scroll">Ver mi recompensa</a>
-  </section>
-
-  <!-- ══ SECCIÓN 3: REVEAL + CUPÓN ══ -->
-  <section id="reveal">
-    <div class="reveal-content">
-      <p class="reveal-pre reveal-on-scroll">La verdad</p>
-      <h2 class="reveal-headline reveal-on-scroll">
-        Nadie te está espiando.<br>Pero sí hay un regalo.
-      </h2>
-      <p class="reveal-sub reveal-on-scroll">
-        Esa curiosidad que no pudiste controlar<br>
-        acaba de conseguirte <strong>papas gratis</strong>.<br>
-        De nada.
-      </p>
-
-      <!-- CUPÓN -->
-      <div class="coupon-wrap reveal-on-scroll">
-        <div class="coupon">
-          <div class="coupon-top">
-            <p class="ct-pre">Regalo de</p>
-            <p class="ct-name">PAPAS</p>
-            <p class="ct-item">100% Gratis 🍟</p>
-          </div>
-          <div class="coupon-perforation">
-            <div class="circle"></div>
-            <div class="dashes"></div>
-            <div class="circle"></div>
-          </div>
-          <div class="coupon-bottom">
-            <div class="cb-brand">
-              <span class="cb-name">Monchis</span>
-              <span class="cb-sub">Alitas a domicilio</span>
-            </div>
-            <p class="cb-cond">
-              Válido con pedido<br>
-              mínimo de $250<br>
-              · Un uso por persona
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <!-- BOTÓN WHATSAPP -->
-      <div class="final-cta reveal-on-scroll">
-        <a
-          href="https://wa.me/523123391898?text=Hola%2C%20vi%20el%20flyer%20y%20quiero%20pedir%20con%20mis%20papas%20gratis%20%F0%9F%8D%9F"
-          class="btn-whatsapp"
-          target="_blank"
-          rel="noopener"
-        >
-          <svg viewBox="0 0 24 24" fill="currentColor">
-            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-          </svg>
-          Pedir ahora por WhatsApp
-        </a>
-        <p class="final-note">
-          312 339 1898 · Monchis Colima<br>
-          Muestra esta pantalla al hacer tu pedido
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <script>
-    // Reveal on scroll
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry, i) => {
-        if (entry.isIntersecting) {
-          setTimeout(() => entry.target.classList.add('visible'), i * 120);
-        }
-      });
-    }, { threshold: 0.15 });
-
-    document.querySelectorAll('.reveal-on-scroll').forEach(el => observer.observe(el));
-  </script>
-
+  </div>
 </body>
 </html>
