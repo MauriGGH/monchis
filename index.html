@@ -144,9 +144,8 @@
 
   .hero-img {
     position:absolute; inset:0;
-    background:url('img/alitas1.jpg') center 40%/cover no-repeat;
+    background:url('img/hero_hq1.jpg') center 40%/cover no-repeat;
     transform-origin:center;
-    will-change:transform;
   }
   .hero-veil {
     position:absolute; inset:0;
@@ -730,6 +729,20 @@
   </div>
 </div>
 
+<!-- ══ PRODUCTO ══ -->
+<section id="product">
+  <div class="s-bg-text appear">ALITAS</div>
+  <div class="section-header">
+    <p class="s-tag appear">Lo que te espera</p>
+    <h2 class="s-title appear d1">Las alitas que<br>no puedes ignorar.</h2>
+  </div>
+  <div class="food-grid appear d2">
+    <div class="food-tile wide" style="background-image:url('img/wings_plate.jpg')"><div class="ft-label">Alitas en salsa</div></div>
+    <div class="food-tile" style="background-image:url('img/wings_chili.jpg')"><div class="ft-label">Chili sesame 🌶️</div></div>
+    <div class="food-tile" style="background-image:url('img/wings_dark.jpg')"><div class="ft-label">Crispy 🔥</div></div>
+  </div>
+</section>
+
 
 <!-- ══ SOCIAL PROOF ══ -->
 <section id="proof">
@@ -856,9 +869,8 @@ addEventListener('scroll',()=>{
 /* ══ PARALLAX HERO ══ */
 const heroImg = document.getElementById('hero-img');
 addEventListener('scroll',()=>{
-  if(scrollY<innerHeight){
-    heroImg.style.transform=`scale(1.05) translateY(${scrollY*.22}px)`;
-  }
+  if(heroImg && scrollY < innerHeight)
+    heroImg.style.backgroundPositionY = `calc(40% + ${scrollY * 0.3}px)`;
 },{passive:true});
 
 /* ══ SCROLL SCRUBBING — CANVAS + LERP ══ */
