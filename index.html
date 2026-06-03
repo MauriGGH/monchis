@@ -62,14 +62,12 @@
       padding-bottom: 40px;
     }
 
-    /* Foto de fondo — reemplaza con tu imagen */
     .hero-bg {
       position: absolute;
       inset: 0;
       background:
-        linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.8) 70%, #0f0400 100%),
-        linear-gradient(160deg, #5c1a00 0%, #2a0900 50%, #1a0400 100%);
-      /* Para agregar foto: background-image: url('tus-alitas.jpg'); background-size: cover; background-position: center; */
+        linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.85) 75%, #0f0400 100%),
+        url('https://images.unsplash.com/photo-1578875858391-50798bc2ffee?w=900&q=80') center/cover no-repeat;
     }
 
     /* Placeholder visual mientras no hay foto */
@@ -223,13 +221,15 @@
       overflow: hidden;
       aspect-ratio: 1;
       position: relative;
-      background: linear-gradient(145deg, #3d1200, #7a2500);
+      background: linear-gradient(145deg, #3d1200, #7a2500) center/cover no-repeat;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 48px;
-      /* Reemplaza con: background-image: url('foto.jpg'); background-size: cover; */
     }
+    .food-card.f1 { background-image: url('https://images.unsplash.com/photo-1567620832903-9fc6debc209f?w=800&q=80'); }
+    .food-card.f2 { background-image: url('https://images.unsplash.com/photo-1592011432621-f7f576f44484?w=600&q=80'); }
+    .food-card.f3 { background-image: url('https://images.unsplash.com/photo-1578875858391-50798bc2ffee?w=600&q=80'); }
 
     .food-card:first-child {
       grid-column: 1 / -1;
@@ -417,8 +417,6 @@
   <section class="hero">
     <div class="hero-bg"></div>
     <div class="hero-badge">🔥 Solo por tiempo limitado</div>
-    <!-- Reemplaza este emoji con tu foto: <img src="alitas.jpg" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"> -->
-    <div class="hero-food-emoji">🍗</div>
     <div class="hero-content">
       <p class="hero-hook">Alguien guardó esto para ti 👀</p>
       <div class="hero-offer">PAPAS<br>GRATIS</div>
@@ -440,10 +438,9 @@
     <div class="section-title">Las alitas que<br>no puedes ignorar.</div>
 
     <div class="food-grid">
-      <!-- Reemplaza cada div.food-card con una imagen tuya -->
-      <div class="food-card">🍗<div class="food-card-label">Alitas BBQ</div></div>
-      <div class="food-card">🔥<div class="food-card-label">Buffalo</div></div>
-      <div class="food-card">🧄<div class="food-card-label">Ajo parmesano</div></div>
+      <div class="food-card f1"><div class="food-card-label">Alitas BBQ</div></div>
+      <div class="food-card f2"><div class="food-card-label">A la parrilla</div></div>
+      <div class="food-card f3"><div class="food-card-label">Con papas 🍟</div></div>
     </div>
   </div>
 
