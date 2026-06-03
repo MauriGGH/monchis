@@ -144,7 +144,7 @@
 
   .hero-img {
     position:absolute; inset:0;
-    background:url('img/alitas3.jpg') center 30%/cover no-repeat;
+    background:url('img/alitas1.jpg') center 40%/cover no-repeat;
     transform-origin:center;
     will-change:transform;
   }
@@ -173,12 +173,14 @@
   }
 
   .hero-logo {
-    position:absolute; top:22px; left:50%;
-    transform:translateX(-50%);
-    width:68px;
-    filter:drop-shadow(0 4px 20px rgba(0,0,0,.8));
-    z-index:3;
-    animation:drop-in .8s cubic-bezier(.34,1.56,.64,1) .2s both;
+    position:absolute;
+    top:50%; left:50%;
+    transform:translate(-50%,-50%);
+    width:min(75vw, 340px);
+    opacity:.18;
+    filter:drop-shadow(0 0 40px rgba(180,0,0,.5));
+    z-index:1;
+    pointer-events:none;
   }
   @keyframes drop-in {
     from{ transform:translateX(-50%) translateY(-24px); opacity:0; }
@@ -728,19 +730,6 @@
   </div>
 </div>
 
-<!-- ══ PRODUCTO ══ -->
-<section id="product">
-  <div class="s-bg-text appear">ALITAS</div>
-  <div class="section-header">
-    <p class="s-tag appear">Lo que te espera</p>
-    <h2 class="s-title appear d1">Las alitas que<br>no puedes ignorar.</h2>
-  </div>
-  <div class="food-grid appear d2">
-    <div class="food-tile wide f1"><div class="ft-label">Alitas BBQ</div></div>
-    <div class="food-tile f2"><div class="ft-label">Con papas 🍟</div></div>
-    <div class="food-tile f3"><div class="ft-label">A la parrilla 🔥</div></div>
-  </div>
-</section>
 
 <!-- ══ SOCIAL PROOF ══ -->
 <section id="proof">
