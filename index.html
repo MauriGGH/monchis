@@ -324,69 +324,75 @@
   /* Fases de texto que entran/salen */
   .phase {
     position:absolute; z-index:10;
-    width:100%; padding:0 28px;
+    width:100%; padding:0 24px;
     text-align:center;
     opacity:0;
     pointer-events:none;
     will-change:opacity,transform;
+    top:50%; transform:translateY(-50%);
+  }
+
+  /* Fondo legible detrás del texto */
+  .phase-inner {
+    display:inline-block;
+    background:rgba(6,1,0,.55);
+    backdrop-filter:blur(16px);
+    -webkit-backdrop-filter:blur(16px);
+    border-radius:24px;
+    padding:28px 28px 24px;
+    max-width:420px;
+    width:100%;
   }
 
   /* Fase 0 — El gancho */
-  #ph0 { top:50%; transform:translateY(-50%); }
   #ph0 .tag {
     font-size:10px; font-weight:700; letter-spacing:5px;
-    color:rgba(255,255,255,.4); text-transform:uppercase;
-    margin-bottom:14px;
+    color:rgba(255,255,255,.5); text-transform:uppercase;
+    margin-bottom:12px;
   }
   #ph0 .big {
     font-family:'Barlow Condensed',sans-serif;
-    font-size:clamp(60px,20vw,110px);
+    font-size:clamp(64px,20vw,110px);
     font-weight:900; line-height:.88;
     letter-spacing:-1px;
   }
-  #ph0 .outline { -webkit-text-stroke:2px rgba(255,255,255,.7); color:transparent; }
+  #ph0 .outline { -webkit-text-stroke:2px rgba(255,255,255,.75); color:transparent; }
 
   /* Fase 1 — El reveal */
-  #ph1 { top:50%; transform:translateY(-50%) translateY(30px); }
   #ph1 .chip {
     display:inline-block;
-    background:rgba(255,255,255,.1);
-    backdrop-filter:blur(10px);
-    border:1px solid rgba(255,255,255,.15);
+    background:rgba(255,255,255,.12);
+    border:1px solid rgba(255,255,255,.2);
     border-radius:100px;
     padding:6px 18px;
     font-size:11px; font-weight:700; letter-spacing:2px;
-    margin-bottom:20px;
+    margin-bottom:18px;
   }
   #ph1 .big {
     font-family:'Barlow Condensed',sans-serif;
-    font-size:clamp(48px,16vw,88px);
+    font-size:clamp(50px,16vw,86px);
     font-weight:900; line-height:.9;
   }
   #ph1 .strike {
     position:relative; display:inline-block;
-    color:rgba(255,255,255,.45);
+    color:rgba(255,255,255,.5);
   }
   #ph1 .strike::after {
     content:''; position:absolute;
     left:0; top:55%;
     height:4px; width:0;
-    background:var(--fire);
-    border-radius:2px;
+    background:var(--fire); border-radius:2px;
   }
   #ph1 .strike.active::after { width:100%; transition:width .7s ease; }
   #ph1 .sub {
-    font-size:clamp(14px,4vw,18px);
-    color:rgba(255,255,255,.55);
-    margin-top:14px; line-height:1.6;
+    font-size:clamp(14px,3.8vw,17px);
+    color:rgba(255,255,255,.7);
+    margin-top:14px; line-height:1.65;
   }
   #ph1 .sub b { color:#fff; }
 
   /* Fase 2 — La oferta */
-  #ph2 {
-    top:50%; transform:translateY(-50%) translateY(30px);
-    padding:0 16px;
-  }
+  #ph2 { padding:0 16px; }
 
   /* Liquid Glass Card */
   .liquid-card {
@@ -649,10 +655,6 @@
   <div class="hero-glow"></div>
   <img class="hero-logo" src="img/logo.png" alt="Monchis">
   <div class="hero-content">
-    <div class="hero-eyebrow">
-      <div class="eyebrow-dot"></div>
-      Solo para quien tenga el flyer
-    </div>
     <h1 class="hero-title">
       <span class="text-outline">PAPAS</span><br>
       GRATIS
@@ -682,24 +684,28 @@
 
     <!-- FASE 0: Gancho -->
     <div class="phase" id="ph0">
-      <div class="tag">👀 Viniste a ver el chisme</div>
-      <div class="big">
-        ¿QUÉ<br>
-        <span class="outline">PASÓ?</span>
+      <div class="phase-inner">
+        <div class="tag">👀 Viniste a ver el chisme</div>
+        <div class="big">
+          ¿QUÉ<br>
+          <span class="outline">PASÓ?</span>
+        </div>
       </div>
     </div>
 
     <!-- FASE 1: Reveal -->
     <div class="phase" id="ph1">
-      <div class="chip">La verdad</div>
-      <div class="big">
-        El chisme<br>
-        <span class="strike" id="strike-word">no existe.</span>
+      <div class="phase-inner">
+        <div class="chip">La verdad</div>
+        <div class="big">
+          El chisme<br>
+          <span class="strike" id="strike-word">no existe.</span>
+        </div>
+        <p class="sub">
+          Pero al menos <b>no te vas con las manos vacías.</b><br>
+          Llegaste justo a tiempo para algo mejor.
+        </p>
       </div>
-      <p class="sub">
-        Pero al menos <b>no te vas con las manos vacías.</b><br>
-        Llegaste justo a tiempo para algo mejor.
-      </p>
     </div>
 
     <!-- FASE 2: Oferta -->
@@ -866,18 +872,18 @@ addEventListener('scroll',()=>{
   }
 },{passive:true});
 
-/* ══ SCROLL SCRUBBING — CANVAS FRAME SEQUENCE ══ */
-const TOTAL_FRAMES = 90;
+/* ══ SCROLL SCRUBBING — CANVAS + LERP ══ */
+const TOTAL_FRAMES = 120;
 const frames = new Array(TOTAL_FRAMES);
 let framesLoaded = 0;
 let ready = false;
 let strikeActivated = false;
 
-const scrubCanvas  = document.getElementById('scrub-canvas');
-const scrubCtx     = scrubCanvas.getContext('2d');
-const scrubLoader  = document.getElementById('scrub-loader');
-const scrubWrap    = document.getElementById('scrub-wrap');
-const scrubVeil    = document.getElementById('scrub-veil');
+const scrubCanvas = document.getElementById('scrub-canvas');
+const scrubCtx    = scrubCanvas.getContext('2d');
+const scrubLoader = document.getElementById('scrub-loader');
+const scrubWrap   = document.getElementById('scrub-wrap');
+const scrubVeil   = document.getElementById('scrub-veil');
 const ph0 = document.getElementById('ph0');
 const ph1 = document.getElementById('ph1');
 const ph2 = document.getElementById('ph2');
@@ -886,83 +892,90 @@ const strikeWord = document.getElementById('strike-word');
 function resizeScrub(){
   scrubCanvas.width  = scrubCanvas.offsetWidth  * devicePixelRatio;
   scrubCanvas.height = scrubCanvas.offsetHeight * devicePixelRatio;
-  scrubCtx.scale(devicePixelRatio, devicePixelRatio);
+  scrubCtx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
 }
 resizeScrub();
 addEventListener('resize', resizeScrub);
 
 function drawFrame(idx){
-  const img = frames[idx];
+  const img = frames[Math.max(0, Math.min(TOTAL_FRAMES-1, Math.round(idx)))];
   if(!img) return;
-  const cw = scrubCanvas.offsetWidth;
-  const ch = scrubCanvas.offsetHeight;
-  // Cover fit
-  const scale = Math.max(cw/img.width, ch/img.height);
-  const dw = img.width*scale, dh = img.height*scale;
-  const dx = (cw-dw)/2, dy = (ch-dh)/2;
+  const cw = scrubCanvas.offsetWidth, ch = scrubCanvas.offsetHeight;
+  const sc = Math.max(cw/img.width, ch/img.height);
+  const dw = img.width*sc, dh = img.height*sc;
   scrubCtx.clearRect(0,0,cw,ch);
-  scrubCtx.drawImage(img, dx, dy, dw, dh);
+  scrubCtx.drawImage(img,(cw-dw)/2,(ch-dh)/2,dw,dh);
 }
 
-// Preload all frames
 function loadFrames(){
+  let loaded = 0;
   for(let i=0; i<TOTAL_FRAMES; i++){
     const img = new Image();
     img.src = `frames/${String(i).padStart(4,'0')}.jpg`;
     img.onload = ()=>{
-      frames[i] = img;
-      framesLoaded++;
-      if(framesLoaded === TOTAL_FRAMES){
+      frames[i] = img; loaded++;
+      if(loaded === TOTAL_FRAMES){
         ready = true;
         scrubLoader.style.opacity = '0';
-        setTimeout(()=>{ scrubLoader.style.display='none'; },500);
+        setTimeout(()=>scrubLoader.style.display='none', 500);
         drawFrame(0);
-        scrub();
       }
     };
   }
 }
 loadFrames();
 
-function easeIO(t){ return t<.5 ? 2*t*t : -1+(4-2*t)*t; }
+function easeIO(t){ return t<.5?2*t*t:-1+(4-2*t)*t; }
+function clamp(v,a,b){ return Math.max(a,Math.min(b,v)); }
+function phase(prog, start, dur){ return clamp((prog-start)/dur,0,1); }
 
-let lastFrame = -1;
-function scrub(){
-  if(!ready) return;
+let targetProg = 0;
+let smoothProg = 0;
+let lastDrawn  = -1;
+
+addEventListener('scroll',()=>{
   const rect  = scrubWrap.getBoundingClientRect();
   const total = scrubWrap.offsetHeight - innerHeight;
-  const prog  = Math.max(0, Math.min(1, -rect.top / total));
+  targetProg = clamp(-rect.top / total, 0, 1);
+},{passive:true});
 
-  // Frame index
-  const fi = Math.round(prog * (TOTAL_FRAMES-1));
-  if(fi !== lastFrame){ drawFrame(fi); lastFrame = fi; }
+// rAF loop — lerp suave
+(function rafLoop(){
+  requestAnimationFrame(rafLoop);
+  if(!ready) return;
 
-  // Overlay veil
-  scrubVeil.style.opacity = 0.3 + prog * 0.35;
+  // Lerp muy suave hacia el target
+  smoothProg += (targetProg - smoothProg) * 0.09;
+  const p = smoothProg;
 
-  // Fase 0: 0 – 0.28
-  const p0    = Math.max(0, Math.min(1, prog / .22));
-  const p0out = Math.max(0, Math.min(1,(prog-.22)/.1));
-  ph0.style.opacity   = p0*(1-p0out);
-  ph0.style.transform = `translateY(calc(-50% + ${(1-p0)*30}px))`;
+  // Dibujar frame
+  const fi = Math.round(p * (TOTAL_FRAMES-1));
+  if(fi !== lastDrawn){ drawFrame(fi); lastDrawn = fi; }
 
-  // Fase 1: 0.3 – 0.62
-  const p1i = Math.max(0, Math.min(1,(prog-.28)/.16));
-  const p1o = Math.max(0, Math.min(1,(prog-.58)/.12));
-  ph1.style.opacity   = easeIO(p1i)*(1-p1o);
-  ph1.style.transform = `translateY(calc(-50% + ${(1-easeIO(p1i))*30}px))`;
-  if(p1i>.6 && !strikeActivated){
+  // Veil
+  scrubVeil.style.opacity = 0.25 + p * 0.4;
+
+  // ── Fase 0: aparece 0→0.25, desaparece 0.25→0.38
+  const p0i = easeIO(phase(p, 0,    0.22));
+  const p0o = easeIO(phase(p, 0.25, 0.13));
+  ph0.style.opacity   = p0i * (1 - p0o);
+  ph0.style.transform = `translateY(calc(-50% + ${(1-p0i)*28}px))`;
+
+  // ── Fase 1: aparece 0.35→0.52, desaparece 0.60→0.72
+  const p1i = easeIO(phase(p, 0.35, 0.17));
+  const p1o = easeIO(phase(p, 0.60, 0.12));
+  ph1.style.opacity   = p1i * (1 - p1o);
+  ph1.style.transform = `translateY(calc(-50% + ${(1-p1i)*28}px))`;
+  if(p1i > 0.7 && !strikeActivated){
     strikeActivated = true;
     strikeWord.classList.add('active');
   }
 
-  // Fase 2: 0.64 – 1
-  const p2i = Math.max(0, Math.min(1,(prog-.62)/.2));
-  ph2.style.opacity   = easeIO(p2i);
-  ph2.style.transform = `translateY(calc(-50% + ${(1-easeIO(p2i))*36}px))`;
-}
-
-addEventListener('scroll', scrub, {passive:true});
+  // ── Fase 2 (PAPAS GRATIS): aparece 0.72→0.88, se queda hasta el final
+  const p2i = easeIO(phase(p, 0.72, 0.16));
+  ph2.style.opacity   = p2i;
+  ph2.style.transform = `translateY(calc(-50% + ${(1-p2i)*32}px))`;
+})();
 
 /* ══ SCROLL REVEAL ══ */
 const revObs = new IntersectionObserver(entries=>{
