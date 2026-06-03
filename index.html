@@ -289,19 +289,37 @@
     display:flex; align-items:center; justify-content:center;
   }
 
-  /* Imagen de producto fija que se anima */
-  .scrub-photo {
+  /* Canvas de frames */
+  #scrub-canvas {
     position:absolute; inset:0;
-    background:center/cover no-repeat;
-    will-change:transform, filter;
-    transform-origin:center;
+    width:100%; height:100%;
+    object-fit:cover;
   }
 
   .scrub-veil {
     position:absolute; inset:0;
-    background:rgba(6,1,0,.55);
-    transition:opacity .3s;
+    background:rgba(6,1,0,.45);
+    pointer-events:none;
   }
+
+  /* Loader */
+  #scrub-loader {
+    position:absolute; inset:0;
+    background:#0a0200;
+    display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+    gap:14px; z-index:20;
+    transition:opacity .5s;
+  }
+  #scrub-loader p { font-size:12px; letter-spacing:3px; color:rgba(255,255,255,.4); }
+  .loader-ring {
+    width:40px; height:40px;
+    border:2px solid rgba(255,255,255,.1);
+    border-top-color:var(--fire);
+    border-radius:50%;
+    animation:spin .8s linear infinite;
+  }
+  @keyframes spin { to{ transform:rotate(360deg); } }
 
   /* Fases de texto que entran/salen */
   .phase {
@@ -652,9 +670,14 @@
 <div id="scrub-wrap">
   <div id="scrub-sticky">
 
-    <!-- Foto que se anima con el scroll -->
-    <div class="scrub-photo" id="scrub-photo"
-         style="background-image:url('img/alitas1.jpg')"></div>
+    <!-- Loader -->
+    <div id="scrub-loader">
+      <div class="loader-ring"></div>
+      <p>Cargando…</p>
+    </div>
+
+    <!-- Canvas donde se dibujan los frames -->
+    <canvas id="scrub-canvas"></canvas>
     <div class="scrub-veil" id="scrub-veil"></div>
 
     <!-- FASE 0: Gancho -->
@@ -843,61 +866,103 @@ addEventListener('scroll',()=>{
   }
 },{passive:true});
 
-/* ══ SCROLL SCRUBBING ══ */
-const wrap   = document.getElementById('scrub-wrap');
-const photo  = document.getElementById('scrub-photo');
-const veil   = document.getElementById('scrub-veil');
-const ph0    = document.getElementById('ph0');
-const ph1    = document.getElementById('ph1');
-const ph2    = document.getElementById('ph2');
-const strike = document.getElementById('strike-word');
-
-const IMGS = ['img/alitas1.jpg','img/alitas2.jpg','img/alitas3.jpg'];
+/* ══ SCROLL SCRUBBING — CANVAS FRAME SEQUENCE ══ */
+const TOTAL_FRAMES = 90;
+const frames = new Array(TOTAL_FRAMES);
+let framesLoaded = 0;
+let ready = false;
 let strikeActivated = false;
 
-function easeInOut(t){ return t<.5 ? 2*t*t : -1+(4-2*t)*t; }
+const scrubCanvas  = document.getElementById('scrub-canvas');
+const scrubCtx     = scrubCanvas.getContext('2d');
+const scrubLoader  = document.getElementById('scrub-loader');
+const scrubWrap    = document.getElementById('scrub-wrap');
+const scrubVeil    = document.getElementById('scrub-veil');
+const ph0 = document.getElementById('ph0');
+const ph1 = document.getElementById('ph1');
+const ph2 = document.getElementById('ph2');
+const strikeWord = document.getElementById('strike-word');
 
+function resizeScrub(){
+  scrubCanvas.width  = scrubCanvas.offsetWidth  * devicePixelRatio;
+  scrubCanvas.height = scrubCanvas.offsetHeight * devicePixelRatio;
+  scrubCtx.scale(devicePixelRatio, devicePixelRatio);
+}
+resizeScrub();
+addEventListener('resize', resizeScrub);
+
+function drawFrame(idx){
+  const img = frames[idx];
+  if(!img) return;
+  const cw = scrubCanvas.offsetWidth;
+  const ch = scrubCanvas.offsetHeight;
+  // Cover fit
+  const scale = Math.max(cw/img.width, ch/img.height);
+  const dw = img.width*scale, dh = img.height*scale;
+  const dx = (cw-dw)/2, dy = (ch-dh)/2;
+  scrubCtx.clearRect(0,0,cw,ch);
+  scrubCtx.drawImage(img, dx, dy, dw, dh);
+}
+
+// Preload all frames
+function loadFrames(){
+  for(let i=0; i<TOTAL_FRAMES; i++){
+    const img = new Image();
+    img.src = `frames/${String(i).padStart(4,'0')}.jpg`;
+    img.onload = ()=>{
+      frames[i] = img;
+      framesLoaded++;
+      if(framesLoaded === TOTAL_FRAMES){
+        ready = true;
+        scrubLoader.style.opacity = '0';
+        setTimeout(()=>{ scrubLoader.style.display='none'; },500);
+        drawFrame(0);
+        scrub();
+      }
+    };
+  }
+}
+loadFrames();
+
+function easeIO(t){ return t<.5 ? 2*t*t : -1+(4-2*t)*t; }
+
+let lastFrame = -1;
 function scrub(){
-  const rect = wrap.getBoundingClientRect();
-  const total = wrap.offsetHeight - innerHeight;
+  if(!ready) return;
+  const rect  = scrubWrap.getBoundingClientRect();
+  const total = scrubWrap.offsetHeight - innerHeight;
   const prog  = Math.max(0, Math.min(1, -rect.top / total));
 
-  /* Imagen de fondo */
-  const imgIdx = prog < .4 ? 0 : prog < .7 ? 1 : 2;
-  photo.style.backgroundImage = `url('${IMGS[imgIdx]}')`;
+  // Frame index
+  const fi = Math.round(prog * (TOTAL_FRAMES-1));
+  if(fi !== lastFrame){ drawFrame(fi); lastFrame = fi; }
 
-  /* Escala + leve rotación */
-  const sc  = 1 + prog * .35;
-  const rot = (prog-.5)*4;
-  photo.style.transform = `scale(${sc}) rotate(${rot}deg)`;
-  veil.style.opacity = .35 + prog*.3;
+  // Overlay veil
+  scrubVeil.style.opacity = 0.3 + prog * 0.35;
 
-  /* Fase 0: 0–0.3 */
-  const p0 = Math.max(0, Math.min(1, prog/.25));
-  const p0out = Math.max(0, Math.min(1,(prog-.25)/.12));
-  const op0 = p0*(1-p0out);
-  ph0.style.opacity  = op0;
-  ph0.style.transform= `translateY(calc(-50% + ${(1-p0)*28}px))`;
+  // Fase 0: 0 – 0.28
+  const p0    = Math.max(0, Math.min(1, prog / .22));
+  const p0out = Math.max(0, Math.min(1,(prog-.22)/.1));
+  ph0.style.opacity   = p0*(1-p0out);
+  ph0.style.transform = `translateY(calc(-50% + ${(1-p0)*30}px))`;
 
-  /* Fase 1: 0.3–0.62 */
-  const p1in  = Math.max(0, Math.min(1,(prog-.28)/.15));
-  const p1out = Math.max(0, Math.min(1,(prog-.58)/.12));
-  const op1   = easeInOut(p1in)*(1-p1out);
-  ph1.style.opacity  = op1;
-  ph1.style.transform= `translateY(calc(-50% + ${(1-easeInOut(p1in))*30}px))`;
-  if(p1in>.5 && !strikeActivated){
-    strikeActivated=true;
-    strike.classList.add('active');
+  // Fase 1: 0.3 – 0.62
+  const p1i = Math.max(0, Math.min(1,(prog-.28)/.16));
+  const p1o = Math.max(0, Math.min(1,(prog-.58)/.12));
+  ph1.style.opacity   = easeIO(p1i)*(1-p1o);
+  ph1.style.transform = `translateY(calc(-50% + ${(1-easeIO(p1i))*30}px))`;
+  if(p1i>.6 && !strikeActivated){
+    strikeActivated = true;
+    strikeWord.classList.add('active');
   }
 
-  /* Fase 2: 0.62–1 */
-  const p2in = Math.max(0, Math.min(1,(prog-.6)/.18));
-  ph2.style.opacity  = easeInOut(p2in);
-  ph2.style.transform= `translateY(calc(-50% + ${(1-easeInOut(p2in))*36}px))`;
+  // Fase 2: 0.64 – 1
+  const p2i = Math.max(0, Math.min(1,(prog-.62)/.2));
+  ph2.style.opacity   = easeIO(p2i);
+  ph2.style.transform = `translateY(calc(-50% + ${(1-easeIO(p2i))*36}px))`;
 }
 
 addEventListener('scroll', scrub, {passive:true});
-scrub();
 
 /* ══ SCROLL REVEAL ══ */
 const revObs = new IntersectionObserver(entries=>{
