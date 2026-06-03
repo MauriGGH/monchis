@@ -4,20 +4,18 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
   <title>Monchis — Alitas a domicilio</title>
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --red:    #e63000;
+      --red: #e63000;
       --orange: #ff6a00;
-      --gold:   #ffd000;
-      --dark:   #080200;
-      --dark2:  #100400;
-      --card:   #161008;
-      --border: rgba(255,255,255,0.07);
-      --text:   rgba(255,255,255,0.6);
+      --gold: #ffc500;
+      --dark: #070100;
+      --glass: rgba(255,255,255,0.06);
+      --glass-border: rgba(255,255,255,0.1);
     }
 
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
     html { scroll-behavior: smooth; }
 
     body {
@@ -25,506 +23,601 @@
       background: var(--dark);
       color: #fff;
       overflow-x: hidden;
-      padding-bottom: 76px;
+      padding-bottom: 80px;
     }
 
-    /* ══ TIPOGRAFÍA ══ */
-    .anton { font-family: 'Anton', Impact, sans-serif; }
+    /* ══════════════════════
+       CANVAS ALITAS CAYENDO
+    ══════════════════════ */
+    #wings-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.55;
+    }
 
-    /* ══ BOTÓN FLOTANTE ══ */
-    .wa-float {
+    /* ══════════════════════
+       STICKY WHATSAPP
+    ══════════════════════ */
+    .wa-bar {
       position: fixed;
       bottom: 0; left: 0; right: 0;
-      z-index: 200;
-      background: rgba(8,2,0,0.92);
-      backdrop-filter: blur(12px);
-      border-top: 1px solid rgba(255,255,255,0.06);
-      padding: 10px 16px 10px;
-      display: flex;
-      justify-content: center;
+      z-index: 500;
+      padding: 10px 16px 12px;
+      background: rgba(7,1,0,0.9);
+      backdrop-filter: blur(20px);
+      border-top: 1px solid rgba(255,255,255,0.07);
     }
-    .wa-float a {
+    .wa-bar a {
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 10px;
-      width: 100%;
-      max-width: 440px;
+      max-width: 460px;
+      margin: 0 auto;
       padding: 15px 20px;
-      background: #25D366;
+      background: linear-gradient(135deg, #1ebe5d, #25D366);
       border-radius: 14px;
       font-size: 15px;
       font-weight: 700;
       color: #fff;
       text-decoration: none;
-      letter-spacing: 0.3px;
-      box-shadow: 0 4px 20px rgba(37,211,102,0.3);
-      transition: opacity 0.2s;
+      box-shadow: 0 6px 24px rgba(37,211,102,0.35);
+      transition: transform 0.15s, box-shadow 0.15s;
       -webkit-tap-highlight-color: transparent;
     }
-    .wa-float a:active { opacity: 0.85; }
-    .wa-float svg { width: 20px; height: 20px; flex-shrink: 0; }
+    .wa-bar a:active { transform: scale(0.97); box-shadow: 0 2px 12px rgba(37,211,102,0.3); }
+    .wa-bar svg { width: 20px; height: 20px; flex-shrink: 0; }
 
-    /* ══ HERO ══ */
-    .hero {
+    /* ══════════════════════
+       HERO
+    ══════════════════════ */
+    #hero {
       position: relative;
       height: 100svh;
-      min-height: 600px;
+      min-height: 620px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: flex-end;
-      text-align: center;
       overflow: hidden;
+      z-index: 1;
     }
 
-    .hero-bg {
+    .hero-photo {
+      position: absolute;
+      inset: 0;
+      background: url('img/alitas3.jpg') center 35% / cover no-repeat;
+      transform: scale(1.05);
+      transition: transform 0.5s ease;
+    }
+
+    .hero-photo::after {
+      content: '';
       position: absolute;
       inset: 0;
       background:
-        url('img/alitas3.jpg') center 30% / cover no-repeat;
+        linear-gradient(to bottom,
+          rgba(7,1,0,0.2) 0%,
+          rgba(7,1,0,0.05) 25%,
+          rgba(7,1,0,0.6) 60%,
+          rgba(7,1,0,1) 100%
+        );
     }
-    .hero-overlay {
+
+    /* Glow animado */
+    .hero-glow {
       position: absolute;
-      inset: 0;
-      background: linear-gradient(
-        to bottom,
-        rgba(8,2,0,0.3)  0%,
-        rgba(8,2,0,0.1) 30%,
-        rgba(8,2,0,0.7) 65%,
-        rgba(8,2,0,1.0) 100%
-      );
+      width: 500px; height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(230,48,0,0.25) 0%, transparent 70%);
+      top: 20%; left: 50%;
+      transform: translate(-50%, -50%);
+      animation: glow-pulse 3s ease-in-out infinite;
+      pointer-events: none;
+    }
+    @keyframes glow-pulse {
+      0%,100% { transform: translate(-50%,-50%) scale(1); opacity:0.6; }
+      50%      { transform: translate(-50%,-50%) scale(1.2); opacity:1; }
     }
 
     .hero-logo {
       position: absolute;
-      top: 20px;
-      left: 50%;
+      top: 22px; left: 50%;
       transform: translateX(-50%);
-      width: 72px;
-      filter: drop-shadow(0 4px 16px rgba(0,0,0,0.7));
+      width: 70px;
+      filter: drop-shadow(0 4px 20px rgba(0,0,0,0.8));
+      z-index: 2;
+      animation: logo-drop 0.8s cubic-bezier(.34,1.56,.64,1) 0.2s both;
+    }
+    @keyframes logo-drop {
+      from { transform: translateX(-50%) translateY(-30px); opacity:0; }
+      to   { transform: translateX(-50%) translateY(0);    opacity:1; }
     }
 
     .hero-content {
       position: relative;
-      z-index: 1;
-      padding: 0 24px 44px;
+      z-index: 2;
+      text-align: center;
+      padding: 0 24px 48px;
       width: 100%;
     }
 
-    .hero-eyebrow {
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 100px;
+      padding: 6px 16px;
       font-size: 11px;
       font-weight: 600;
-      letter-spacing: 4px;
-      color: var(--gold);
-      text-transform: uppercase;
-      margin-bottom: 10px;
-      opacity: 0.9;
+      letter-spacing: 1.5px;
+      margin-bottom: 14px;
+      animation: badge-in 0.7s ease 0.5s both;
+    }
+    @keyframes badge-in {
+      from { opacity:0; transform:translateY(10px); }
+      to   { opacity:1; transform:translateY(0); }
     }
 
     .hero-title {
       font-family: 'Anton', Impact, sans-serif;
-      font-size: clamp(64px, 20vw, 96px);
-      line-height: 0.9;
-      letter-spacing: 2px;
-      margin-bottom: 12px;
-      text-shadow: 0 4px 24px rgba(0,0,0,0.5);
+      font-size: clamp(72px, 22vw, 110px);
+      line-height: 0.88;
+      letter-spacing: 3px;
+      animation: title-in 0.9s cubic-bezier(.34,1.2,.64,1) 0.6s both;
+    }
+    @keyframes title-in {
+      from { opacity:0; transform:translateY(30px) scale(0.95); }
+      to   { opacity:1; transform:translateY(0) scale(1); }
     }
 
-    .hero-title .line2 {
+    /* Texto con gradiente animado */
+    .grad-text {
+      background: linear-gradient(90deg, #fff 0%, var(--gold) 40%, #fff 80%, var(--gold) 100%);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: shine 3s linear infinite;
+    }
+    @keyframes shine {
+      to { background-position: 200% center; }
+    }
+
+    .hero-sub-line {
+      font-family: 'Anton', sans-serif;
+      font-size: clamp(28px, 8vw, 40px);
+      letter-spacing: 6px;
       color: var(--gold);
-      font-size: clamp(40px, 12vw, 58px);
-      letter-spacing: 5px;
-      display: block;
+      margin-bottom: 14px;
+      animation: title-in 0.9s cubic-bezier(.34,1.2,.64,1) 0.75s both;
     }
 
-    .hero-sub {
-      font-size: 14px;
+    .hero-cond {
+      font-size: 13px;
       font-weight: 500;
-      color: rgba(255,255,255,0.55);
-      margin-bottom: 28px;
-      letter-spacing: 0.3px;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 30px;
+      animation: badge-in 0.7s ease 1s both;
     }
-    .hero-sub strong { color: rgba(255,255,255,0.85); }
+    .hero-cond strong { color: rgba(255,255,255,0.85); }
 
-    .hero-scroll {
+    .scroll-indicator {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
+      animation: badge-in 0.7s ease 1.3s both;
     }
-    .hero-scroll span {
+    .scroll-indicator span {
       font-size: 9px;
-      font-weight: 600;
+      font-weight: 700;
       letter-spacing: 4px;
-      color: rgba(255,255,255,0.25);
+      color: rgba(255,255,255,0.2);
       text-transform: uppercase;
     }
-    .hero-scroll-line {
-      width: 1px;
-      height: 32px;
-      background: linear-gradient(to bottom, rgba(255,255,255,0.25), transparent);
-      animation: scrollline 2s ease-in-out infinite;
+    .scroll-line {
+      width: 1px; height: 36px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.3), transparent);
+      animation: scroll-drop 2s ease infinite 1.5s;
     }
-    @keyframes scrollline {
+    @keyframes scroll-drop {
       0%   { transform: scaleY(0); transform-origin: top; opacity:0; }
       50%  { transform: scaleY(1); transform-origin: top; opacity:1; }
       100% { transform: scaleY(1); transform-origin: bottom; opacity:0; }
     }
 
-    /* ══ REVEAL DEL CHISME ══ */
-    .reveal-section {
+    /* ══════════════════════
+       REVEAL CHISME
+    ══════════════════════ */
+    #reveal {
+      position: relative;
+      z-index: 1;
       background: #fff;
-      color: #0a0200;
-      padding: 56px 24px;
+      padding: 60px 24px 50px;
       text-align: center;
+      overflow: hidden;
     }
 
-    .reveal-tag {
+    #reveal::before {
+      content: '';
+      position: absolute;
+      top: -40px; left: 0; right: 0;
+      height: 80px;
+      background: url("data:image/svg+xml,%3Csvg viewBox='0 0 1440 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0,80 Q360,0 720,40 Q1080,80 1440,20 L1440,80 Z' fill='white'/%3E%3C/svg%3E") center/cover;
+    }
+
+    .reveal-chip {
       display: inline-block;
-      background: #fff0e0;
+      background: #fff0e8;
       color: var(--red);
       font-size: 10px;
-      font-weight: 700;
+      font-weight: 800;
       letter-spacing: 3px;
       text-transform: uppercase;
-      padding: 5px 14px;
+      padding: 5px 16px;
       border-radius: 100px;
-      margin-bottom: 20px;
+      margin-bottom: 22px;
     }
 
     .reveal-title {
-      font-family: 'Anton', Impact, sans-serif;
-      font-size: clamp(32px, 9vw, 48px);
-      line-height: 1.1;
-      color: #0a0200;
-      margin-bottom: 12px;
+      font-family: 'Anton', sans-serif;
+      font-size: clamp(34px, 10vw, 52px);
+      color: #0a0100;
+      line-height: 1.05;
+      margin-bottom: 10px;
       letter-spacing: 1px;
     }
 
-    .reveal-title .cross {
-      color: #ccc;
-      text-decoration: line-through;
+    .strikethrough-anim {
+      position: relative;
+      display: inline-block;
+      color: #bbb;
     }
-
-    .reveal-divider {
-      width: 48px;
-      height: 3px;
+    .strikethrough-anim::after {
+      content: '';
+      position: absolute;
+      left: 0; top: 55%;
+      width: 0; height: 3px;
       background: var(--red);
       border-radius: 2px;
-      margin: 16px auto;
+      transition: width 0.8s ease 0.3s;
+    }
+    .strikethrough-anim.struck::after { width: 100%; }
+
+    .reveal-bar {
+      width: 50px; height: 4px;
+      background: linear-gradient(90deg, var(--red), var(--orange));
+      border-radius: 2px;
+      margin: 18px auto 22px;
     }
 
-    .reveal-body {
+    .reveal-text {
       font-size: clamp(15px, 4vw, 18px);
-      font-weight: 400;
-      color: #444;
-      line-height: 1.7;
-      max-width: 360px;
+      color: #555;
+      line-height: 1.75;
+      max-width: 380px;
       margin: 0 auto;
     }
+    .reveal-text strong { color: #0a0100; font-weight: 800; }
 
-    .reveal-body strong {
-      color: #0a0200;
-      font-weight: 700;
+    /* ══════════════════════
+       OFERTA — GLASS CARD
+    ══════════════════════ */
+    #offer {
+      position: relative;
+      z-index: 1;
+      background: linear-gradient(180deg, #fff 0%, #0a0100 60%);
+      padding: 0 20px 48px;
     }
 
-    /* ══ OFERTA ══ */
-    .offer-section {
-      padding: 0 16px 0;
-      margin-top: -2px;
-      background: #fff;
-    }
-
-    .offer-card {
-      background: linear-gradient(135deg, var(--red) 0%, var(--orange) 100%);
-      border-radius: 20px;
-      padding: 28px 22px;
+    .offer-glass {
+      max-width: 460px;
+      margin: 0 auto;
+      background: linear-gradient(135deg, rgba(230,48,0,0.9), rgba(255,106,0,0.9));
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,150,80,0.3);
+      border-radius: 24px;
+      padding: 32px 24px;
       text-align: center;
-      max-width: 440px;
-      margin: 0 auto;
-      box-shadow: 0 20px 50px rgba(230,48,0,0.25);
+      box-shadow:
+        0 30px 60px rgba(230,48,0,0.3),
+        0 0 0 1px rgba(255,150,80,0.15) inset;
       position: relative;
       overflow: hidden;
     }
 
-    .offer-card::after {
-      content: '🍟';
+    .offer-glass::before {
+      content: '';
       position: absolute;
-      font-size: 140px;
-      right: -24px;
-      bottom: -24px;
-      opacity: 0.12;
+      top: -50%; left: -50%;
+      width: 200%; height: 200%;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.12) 0%, transparent 60%);
       pointer-events: none;
     }
 
-    .oc-label {
+    .offer-glass::after {
+      content: '🍟';
+      position: absolute;
+      font-size: 150px;
+      right: -20px; bottom: -20px;
+      opacity: 0.1;
+      pointer-events: none;
+    }
+
+    .og-label {
       font-size: 10px;
       font-weight: 700;
       letter-spacing: 4px;
-      color: rgba(255,255,255,0.7);
-      text-transform: uppercase;
-      margin-bottom: 6px;
-    }
-
-    .oc-big {
-      font-family: 'Anton', Impact, sans-serif;
-      font-size: clamp(52px, 16vw, 72px);
-      line-height: 0.88;
-      letter-spacing: 2px;
-      color: #fff;
-      text-shadow: 0 4px 12px rgba(0,0,0,0.2);
-      margin-bottom: 4px;
-    }
-
-    .oc-item {
-      font-family: 'Anton', Impact, sans-serif;
-      font-size: clamp(24px, 7vw, 32px);
-      letter-spacing: 4px;
-      color: var(--gold);
-      margin-bottom: 18px;
-    }
-
-    .oc-pill {
-      display: inline-block;
-      background: rgba(0,0,0,0.2);
-      border-radius: 10px;
-      padding: 10px 18px;
-      font-size: 12px;
-      font-weight: 600;
-      color: rgba(255,255,255,0.85);
-      line-height: 1.6;
-    }
-
-    /* ══ URGENCIA ══ */
-    .urgency-row {
-      background: #fff;
-      padding: 20px 24px 32px;
-      display: flex;
-      justify-content: center;
-    }
-
-    .urgency-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: #fff5f0;
-      border: 1.5px solid #ffd0b0;
-      border-radius: 100px;
-      padding: 8px 18px;
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--red);
-    }
-
-    .urgency-dot {
-      width: 7px; height: 7px;
-      border-radius: 50%;
-      background: var(--red);
-      animation: blink 1s ease infinite;
-    }
-    @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.2;} }
-
-    /* ══ SEPARADOR ══ */
-    .wave-sep {
-      width: 100%;
-      overflow: hidden;
-      line-height: 0;
-      background: #fff;
-    }
-    .wave-sep svg { display: block; width: 100%; }
-
-    /* ══ PRODUCTO ══ */
-    .product-section {
-      background: var(--dark2);
-      padding: 48px 20px 40px;
-    }
-
-    .section-header {
-      text-align: center;
-      margin-bottom: 28px;
-    }
-
-    .section-tag {
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 4px;
-      color: var(--red);
+      color: rgba(255,255,255,0.65);
       text-transform: uppercase;
       margin-bottom: 8px;
     }
 
-    .section-title {
-      font-family: 'Anton', Impact, sans-serif;
-      font-size: clamp(30px, 9vw, 42px);
-      letter-spacing: 1px;
-      line-height: 1.1;
+    .og-big {
+      font-family: 'Anton', sans-serif;
+      font-size: clamp(60px, 18vw, 80px);
+      line-height: 0.88;
+      color: #fff;
+      text-shadow: 0 4px 16px rgba(0,0,0,0.25);
+      letter-spacing: 3px;
+      margin-bottom: 4px;
     }
 
-    /* Grid fotos */
+    .og-item {
+      font-family: 'Anton', sans-serif;
+      font-size: clamp(26px, 8vw, 34px);
+      letter-spacing: 5px;
+      color: var(--gold);
+      text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      margin-bottom: 20px;
+    }
+
+    .og-pill {
+      background: rgba(0,0,0,0.2);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 12px;
+      padding: 12px 18px;
+      font-size: 12px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.85);
+      line-height: 1.65;
+    }
+
+    /* Urgencia */
+    .urgency-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      margin-top: 20px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 100px;
+      padding: 7px 18px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: var(--gold);
+    }
+    .u-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--gold);
+      animation: blink 1s ease infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.15;} }
+
+    /* ══════════════════════
+       PRODUCTO
+    ══════════════════════ */
+    #product {
+      position: relative;
+      z-index: 1;
+      background: #0a0100;
+      padding: 56px 20px 48px;
+    }
+
+    .sec-eyebrow {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 4px;
+      color: var(--red);
+      text-transform: uppercase;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    .sec-title {
+      font-family: 'Anton', sans-serif;
+      font-size: clamp(32px, 9vw, 46px);
+      letter-spacing: 1px;
+      text-align: center;
+      line-height: 1.05;
+      margin-bottom: 28px;
+    }
+
     .food-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      max-width: 440px;
+      gap: 12px;
+      max-width: 460px;
       margin: 0 auto;
     }
 
-    .food-item {
-      border-radius: 14px;
+    .food-card {
+      border-radius: 16px;
       overflow: hidden;
       position: relative;
       aspect-ratio: 1;
-      background: var(--card) center/cover no-repeat;
+      background: #1a0500 center/cover no-repeat;
+      cursor: pointer;
     }
 
-    .food-item.wide {
+    .food-card.wide {
       grid-column: 1 / -1;
       aspect-ratio: 16/8;
     }
 
-    .food-item.f1 { background-image: url('img/alitas1.jpg'); }
-    .food-item.f2 { background-image: url('img/alitas2.jpg'); }
-    .food-item.f3 { background-image: url('img/alitas3.jpg'); }
+    .food-card.f1 { background-image: url('img/alitas1.jpg'); }
+    .food-card.f2 { background-image: url('img/alitas2.jpg'); }
+    .food-card.f3 { background-image: url('img/alitas3.jpg'); }
 
-    .food-item-label {
+    .food-card::before {
+      content: '';
       position: absolute;
-      bottom: 0; left: 0; right: 0;
-      background: linear-gradient(transparent, rgba(0,0,0,0.75));
-      padding: 24px 12px 10px;
+      inset: 0;
+      background: linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.75));
+    }
+
+    .food-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(230,48,0,0.15);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .food-card:hover::after { opacity: 1; }
+
+    .food-label {
+      position: absolute;
+      bottom: 10px; left: 12px;
       font-size: 13px;
       font-weight: 700;
       letter-spacing: 0.5px;
+      z-index: 1;
     }
 
-    /* ══ SOCIAL PROOF ══ */
-    .proof-section {
-      background: var(--dark);
-      padding: 40px 20px;
+    /* ══════════════════════
+       SOCIAL PROOF
+    ══════════════════════ */
+    #proof {
+      position: relative;
+      z-index: 1;
+      background: linear-gradient(180deg, #0a0100 0%, #0f0300 100%);
+      padding: 48px 20px;
     }
 
-    .stats-row {
+    .stats-grid {
       display: flex;
       gap: 10px;
-      max-width: 440px;
-      margin: 0 auto 28px;
+      max-width: 460px;
+      margin: 0 auto 32px;
     }
 
-    .stat-box {
+    .stat-card {
       flex: 1;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 16px 8px;
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 18px 8px;
       text-align: center;
+      backdrop-filter: blur(10px);
     }
 
     .stat-num {
-      font-family: 'Anton', Impact, sans-serif;
-      font-size: 28px;
+      font-family: 'Anton', sans-serif;
+      font-size: 30px;
       letter-spacing: 1px;
       color: var(--gold);
       line-height: 1;
     }
 
-    .stat-label {
-      font-size: 10px;
-      font-weight: 600;
-      color: rgba(255,255,255,0.35);
-      letter-spacing: 1px;
+    .stat-lbl {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      color: rgba(255,255,255,0.3);
       text-transform: uppercase;
-      margin-top: 4px;
+      margin-top: 5px;
     }
 
-    /* Reviews */
-    .reviews-list {
+    .reviews {
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      max-width: 440px;
+      gap: 12px;
+      max-width: 460px;
       margin: 0 auto;
     }
 
-    .review {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 16px;
+    .review-card {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 18px;
+      padding: 18px;
       display: flex;
-      gap: 12px;
-      align-items: flex-start;
+      gap: 14px;
+      backdrop-filter: blur(10px);
+      transition: border-color 0.3s;
     }
+    .review-card:hover { border-color: rgba(255,255,255,0.18); }
 
-    .review-av {
-      width: 40px;
-      height: 40px;
+    .r-avatar {
+      width: 42px; height: 42px;
       border-radius: 50%;
       background: linear-gradient(135deg, var(--red), var(--orange));
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 15px;
-      font-weight: 700;
+      font-size: 16px;
+      font-weight: 800;
       flex-shrink: 0;
-      color: #fff;
     }
 
-    .review-body {}
-    .review-name {
-      font-size: 13px;
-      font-weight: 700;
-      margin-bottom: 2px;
-    }
-    .review-stars {
-      font-size: 11px;
-      color: var(--gold);
-      margin-bottom: 6px;
-    }
-    .review-text {
-      font-size: 13px;
-      color: rgba(255,255,255,0.55);
-      line-height: 1.55;
-    }
+    .r-name { font-size: 13px; font-weight: 700; margin-bottom: 2px; }
+    .r-stars { font-size: 11px; color: var(--gold); margin-bottom: 7px; }
+    .r-text { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.6; }
 
-    /* ══ FOOTER ══ */
-    .footer {
-      background: var(--dark);
-      border-top: 1px solid var(--border);
+    /* ══════════════════════
+       FOOTER
+    ══════════════════════ */
+    footer {
+      position: relative;
+      z-index: 1;
+      background: #070100;
+      border-top: 1px solid rgba(255,255,255,0.05);
       padding: 28px 20px;
       text-align: center;
     }
 
-    .footer img {
-      width: 60px;
-      opacity: 0.5;
-      margin-bottom: 8px;
-    }
+    footer img { width: 56px; opacity: 0.45; margin-bottom: 8px; }
+    footer p { font-size: 11px; color: rgba(255,255,255,0.18); line-height: 1.7; }
 
-    .footer p {
-      font-size: 11px;
-      color: rgba(255,255,255,0.2);
-      letter-spacing: 1px;
-    }
-
-    /* ══ ANIMACIONES SCROLL ══ */
-    .fade-up {
+    /* ══════════════════════
+       ANIMACIONES SCROLL
+    ══════════════════════ */
+    .reveal {
       opacity: 0;
-      transform: translateY(28px);
-      transition: opacity 0.65s ease, transform 0.65s ease;
+      transform: translateY(36px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
     }
-    .fade-up.show {
-      opacity: 1;
-      transform: translateY(0);
+    .reveal.d1 { transition-delay: 0.1s; }
+    .reveal.d2 { transition-delay: 0.2s; }
+    .reveal.d3 { transition-delay: 0.3s; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    .reveal-scale {
+      opacity: 0;
+      transform: scale(0.92);
+      transition: opacity 0.7s ease, transform 0.7s cubic-bezier(.34,1.2,.64,1);
     }
-    .fade-up.delay-1 { transition-delay: 0.1s; }
-    .fade-up.delay-2 { transition-delay: 0.2s; }
-    .fade-up.delay-3 { transition-delay: 0.3s; }
+    .reveal-scale.visible { opacity: 1; transform: none; }
   </style>
 </head>
 <body>
 
-  <!-- ══ BOTÓN FIJO ══ -->
-  <div class="wa-float">
+  <!-- ══ CANVAS ALITAS ══ -->
+  <canvas id="wings-canvas"></canvas>
+
+  <!-- ══ WHATSAPP FIJO ══ -->
+  <div class="wa-bar">
     <a href="https://wa.me/523123391898?text=Hola%2C%20quiero%20pedir%20y%20reclamar%20mis%20papas%20gratis%20%F0%9F%8D%9F" target="_blank" rel="noopener">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
       Pedir ahora — papas gratis incluidas
@@ -532,152 +625,245 @@
   </div>
 
   <!-- ══ HERO ══ -->
-  <section class="hero">
-    <div class="hero-bg"></div>
-    <div class="hero-overlay"></div>
+  <section id="hero">
+    <div class="hero-photo"></div>
+    <div class="hero-glow"></div>
     <img class="hero-logo" src="img/logo.png" alt="Monchis">
     <div class="hero-content">
-      <p class="hero-eyebrow">👀 Solo para quien tenga el flyer</p>
-      <div class="hero-title anton">
-        PAPAS<br>
-        <span class="line2">GRATIS</span>
-      </div>
-      <p class="hero-sub">Con tu pedido de <strong>$250 o más</strong> · Tiempo limitado</p>
-      <div class="hero-scroll">
-        <span>ver más</span>
-        <div class="hero-scroll-line"></div>
+      <div class="hero-badge">🔥 Solo para quien tenga el flyer</div>
+      <h1 class="hero-title"><span class="grad-text">PAPAS</span><br>GRATIS</h1>
+      <div class="hero-sub-line">🍟 CON TU PEDIDO</div>
+      <p class="hero-cond">Mínimo <strong>$250</strong> · Tiempo limitado · Muestra esta pantalla</p>
+      <div class="scroll-indicator">
+        <span>descubre más</span>
+        <div class="scroll-line"></div>
       </div>
     </div>
   </section>
 
   <!-- ══ REVEAL CHISME ══ -->
-  <section class="reveal-section">
-    <div class="fade-up">
-      <div class="reveal-tag">La verdad</div>
-    </div>
-    <div class="fade-up delay-1">
-      <h2 class="reveal-title">
-        El chisme<br>
-        <span class="cross">no existe.</span>
-      </h2>
-      <div class="reveal-divider"></div>
-    </div>
-    <div class="fade-up delay-2">
-      <p class="reveal-body">
-        No viniste a ver lo que esperabas.<br>
-        Pero al menos <strong>no te vas con las manos vacías.</strong><br><br>
-        Llegaste justo a tiempo para algo mejor.
-      </p>
-    </div>
+  <section id="reveal">
+    <div class="reveal-chip">La verdad</div>
+    <h2 class="reveal-title">
+      El chisme<br>
+      <span class="strikethrough-anim" id="strike">no existe.</span>
+    </h2>
+    <div class="reveal-bar"></div>
+    <p class="reveal-text">
+      No era lo que esperabas, ¿verdad?<br>
+      Pero al menos <strong>no te vas con las manos vacías.</strong><br><br>
+      Llegaste justo a tiempo para algo mejor.
+    </p>
   </section>
 
   <!-- ══ OFERTA ══ -->
-  <section class="offer-section">
-    <div class="offer-card fade-up" style="margin-bottom:0; border-radius: 20px 20px 0 0;">
-      <p class="oc-label">Tu premio por la curiosidad</p>
-      <div class="oc-big anton">PAPAS</div>
-      <div class="oc-item anton">GRATIS 🍟</div>
-      <div class="oc-pill">
+  <section id="offer">
+    <div class="offer-glass reveal-scale">
+      <p class="og-label">Tu premio por la curiosidad</p>
+      <div class="og-big">PAPAS</div>
+      <div class="og-item">GRATIS 🍟</div>
+      <div class="og-pill">
         Pedido mínimo $250 · Muestra esta pantalla<br>Un uso por persona
+      </div>
+      <div class="urgency-tag">
+        <div class="u-dot"></div>
+        Quedan pocas · Solo por tiempo limitado
       </div>
     </div>
   </section>
 
-  <!-- ══ URGENCIA ══ -->
-  <div class="urgency-row">
-    <div class="urgency-chip fade-up">
-      <div class="urgency-dot"></div>
-      Quedan pocas · Solo por tiempo limitado
-    </div>
-  </div>
-
-  <!-- SEPARADOR WAVE -->
-  <div class="wave-sep">
-    <svg viewBox="0 0 1440 48" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-      <path d="M0,48 L0,24 Q180,0 360,24 Q540,48 720,24 Q900,0 1080,24 Q1260,48 1440,24 L1440,48 Z" fill="#100400"/>
-    </svg>
-  </div>
-
   <!-- ══ PRODUCTO ══ -->
-  <section class="product-section">
-    <div class="section-header fade-up">
-      <p class="section-tag">Lo que te espera</p>
-      <h2 class="section-title anton">Las alitas que<br>no puedes ignorar.</h2>
-    </div>
-    <div class="food-grid fade-up delay-1">
-      <div class="food-item wide f1"><div class="food-item-label">Alitas BBQ</div></div>
-      <div class="food-item f2"><div class="food-item-label">Con papas 🍟</div></div>
-      <div class="food-item f3"><div class="food-item-label">A la parrilla 🔥</div></div>
+  <section id="product">
+    <p class="sec-eyebrow reveal">Lo que te espera</p>
+    <h2 class="sec-title reveal d1">Las alitas que<br>no puedes ignorar.</h2>
+    <div class="food-grid reveal d2">
+      <div class="food-card wide f1"><div class="food-label">Alitas BBQ</div></div>
+      <div class="food-card f2"><div class="food-label">Con papas 🍟</div></div>
+      <div class="food-card f3"><div class="food-label">A la parrilla 🔥</div></div>
     </div>
   </section>
 
   <!-- ══ SOCIAL PROOF ══ -->
-  <section class="proof-section">
-    <div class="section-header fade-up">
-      <p class="section-tag">Por qué elegirnos</p>
-      <h2 class="section-title anton">La gente ya habló.</h2>
+  <section id="proof">
+    <p class="sec-eyebrow reveal">Por qué elegirnos</p>
+    <h2 class="sec-title reveal d1">La gente ya habló.</h2>
+
+    <div class="stats-grid">
+      <div class="stat-card reveal"><div class="stat-num" data-target="4.9">0</div><div class="stat-lbl">⭐ Rating</div></div>
+      <div class="stat-card reveal d1"><div class="stat-num" data-target="200">0</div><div class="stat-lbl">Pedidos/sem</div></div>
+      <div class="stat-card reveal d2"><div class="stat-num" data-target="30">0</div><div class="stat-lbl">Min entrega</div></div>
     </div>
 
-    <div class="stats-row">
-      <div class="stat-box fade-up">
-        <div class="stat-num">4.9</div>
-        <div class="stat-label">⭐ Rating</div>
-      </div>
-      <div class="stat-box fade-up delay-1">
-        <div class="stat-num">200+</div>
-        <div class="stat-label">Pedidos / sem.</div>
-      </div>
-      <div class="stat-box fade-up delay-2">
-        <div class="stat-num">~30m</div>
-        <div class="stat-label">Entrega</div>
-      </div>
-    </div>
-
-    <div class="reviews-list">
-      <div class="review fade-up">
-        <div class="review-av">S</div>
-        <div class="review-body">
-          <div class="review-name">Sandra M.</div>
-          <div class="review-stars">★★★★★</div>
-          <p class="review-text">"Las mejores alitas de Colima, no exagero. Ya pedí 3 veces esta semana 😭🍗"</p>
+    <div class="reviews">
+      <div class="review-card reveal">
+        <div class="r-avatar">S</div>
+        <div>
+          <div class="r-name">Sandra M.</div>
+          <div class="r-stars">★★★★★</div>
+          <p class="r-text">"Las mejores alitas de Colima, no exagero. Ya pedí 3 veces esta semana 😭🍗"</p>
         </div>
       </div>
-      <div class="review fade-up delay-1">
-        <div class="review-av">J</div>
-        <div class="review-body">
-          <div class="review-name">Jorge R.</div>
-          <div class="review-stars">★★★★★</div>
-          <p class="review-text">"Llegaron calientes y bien salsudas. Las papas gratis sellaron el trato 🔥"</p>
+      <div class="review-card reveal d1">
+        <div class="r-avatar">J</div>
+        <div>
+          <div class="r-name">Jorge R.</div>
+          <div class="r-stars">★★★★★</div>
+          <p class="r-text">"Llegaron calientes y bien salsudas. Las papas gratis sellaron el trato 🔥"</p>
         </div>
       </div>
-      <div class="review fade-up delay-2">
-        <div class="review-av">A</div>
-        <div class="review-body">
-          <div class="review-name">Ana L.</div>
-          <div class="review-stars">★★★★★</div>
-          <p class="review-text">"Rápido, rico y el precio buenísimo. Ya no pido en otro lugar 🙌"</p>
+      <div class="review-card reveal d2">
+        <div class="r-avatar">A</div>
+        <div>
+          <div class="r-name">Ana L.</div>
+          <div class="r-stars">★★★★★</div>
+          <p class="r-text">"Rápido, rico y el precio buenísimo. Ya no pido en otro lugar 🙌"</p>
         </div>
       </div>
     </div>
   </section>
 
   <!-- ══ FOOTER ══ -->
-  <footer class="footer">
+  <footer>
     <img src="img/logo.png" alt="Monchis">
     <p>Monchis · Alitas a domicilio · Colima<br>312 339 1898</p>
   </footer>
 
   <script>
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(e => {
-        if (e.isIntersecting) {
-          e.target.classList.add('show');
-          observer.unobserve(e.target);
-        }
-      });
-    }, { threshold: 0.12 });
+  /* ══ CANVAS: ALITAS CAYENDO ══ */
+  const canvas = document.getElementById('wings-canvas');
+  const ctx = canvas.getContext('2d');
+  const EMOJIS = ['🍗', '🍗', '🍗', '🔥', '🌶️'];
+  let wings = [];
+  let scrollY = 0;
+  let spawnRate = 0.3;
 
-    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+  function resize() {
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  class Wing {
+    constructor() { this.reset(true); }
+    reset(initial = false) {
+      this.x       = Math.random() * canvas.width;
+      this.y       = initial ? Math.random() * canvas.height * -1 : -60;
+      this.size    = Math.random() * 22 + 14;
+      this.vy      = Math.random() * 1.2 + 0.5;
+      this.vx      = (Math.random() - 0.5) * 0.8;
+      this.rot     = Math.random() * 360;
+      this.rotV    = (Math.random() - 0.5) * 2.5;
+      this.opacity = Math.random() * 0.5 + 0.2;
+      this.emoji   = EMOJIS[Math.floor(Math.random() * EMOJIS.length)];
+      this.wobble  = Math.random() * Math.PI * 2;
+      this.wobbleS = Math.random() * 0.03 + 0.01;
+    }
+    update() {
+      this.wobble += this.wobbleS;
+      this.y   += this.vy + scrollY * 0.002;
+      this.x   += this.vx + Math.sin(this.wobble) * 0.4;
+      this.rot += this.rotV;
+      if (this.y > canvas.height + 80) this.reset();
+    }
+    draw() {
+      ctx.save();
+      ctx.globalAlpha = this.opacity;
+      ctx.font = `${this.size}px serif`;
+      ctx.translate(this.x, this.y);
+      ctx.rotate(this.rot * Math.PI / 180);
+      ctx.fillText(this.emoji, -this.size / 2, this.size / 2);
+      ctx.restore();
+    }
+  }
+
+  for (let i = 0; i < 18; i++) wings.push(new Wing());
+
+  let lastScroll = 0;
+  window.addEventListener('scroll', () => {
+    const s = window.scrollY;
+    scrollY = s - lastScroll;
+    lastScroll = s;
+    // Ráfaga al scrollear rápido
+    if (Math.abs(scrollY) > 30) {
+      for (let i = 0; i < 3; i++) {
+        const w = new Wing();
+        w.y = -30;
+        w.x = Math.random() * canvas.width;
+        wings.push(w);
+      }
+      if (wings.length > 40) wings.splice(0, wings.length - 40);
+    }
+    scrollY *= 0.9;
+  });
+
+  function loop() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // Spawn gradual
+    if (Math.random() < 0.025 && wings.length < 22) wings.push(new Wing());
+    wings.forEach(w => { w.update(); w.draw(); });
+    requestAnimationFrame(loop);
+  }
+  loop();
+
+  /* ══ SCROLL REVEAL ══ */
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.reveal, .reveal-scale').forEach(el => observer.observe(el));
+
+  /* ══ STRIKE ANIMATION ══ */
+  const strikeObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('struck'), 400);
+        strikeObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.5 });
+  const strike = document.getElementById('strike');
+  if (strike) strikeObs.observe(strike);
+
+  /* ══ CONTADORES ANIMADOS ══ */
+  const countObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const el = e.target;
+      const target = parseFloat(el.dataset.target);
+      const isDecimal = target % 1 !== 0;
+      const suffix = el.closest('.stat-card').querySelector('.stat-lbl').textContent.includes('Rating') ? '' : (el.closest('.stat-card').querySelector('.stat-lbl').textContent.includes('Min') ? 'm' : '+');
+      let start = 0;
+      const duration = 1400;
+      const step = timestamp => {
+        if (!start) start = timestamp;
+        const progress = Math.min((timestamp - start) / duration, 1);
+        const ease = 1 - Math.pow(1 - progress, 3);
+        const val = ease * target;
+        el.textContent = isDecimal ? val.toFixed(1) + suffix : Math.floor(val) + suffix;
+        if (progress < 1) requestAnimationFrame(step);
+        else el.textContent = (isDecimal ? target.toFixed(1) : target) + suffix;
+      };
+      requestAnimationFrame(step);
+      countObs.unobserve(el);
+    });
+  }, { threshold: 0.5 });
+
+  document.querySelectorAll('.stat-num[data-target]').forEach(el => countObs.observe(el));
+
+  /* ══ PARALLAX HERO ══ */
+  const heroPhoto = document.querySelector('.hero-photo');
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    if (heroPhoto && y < window.innerHeight) {
+      heroPhoto.style.transform = `scale(1.05) translateY(${y * 0.25}px)`;
+    }
+  }, { passive: true });
   </script>
 
 </body>
